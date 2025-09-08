@@ -1,10 +1,157 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-  <title>邱其德-作物健康管理顧問-服務說明網</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>作物健康管理顧問－邱其德｜碳氮平衡 × 科學管理 × 產量品質雙升</title>
+  <meta name="description" content="專注作物健康與營養平衡的顧問服務：為農企業、農民與一般消費者提供科學栽培、培訓與技術 SOP。LINE＠、粉專、聯絡表單一鍵通。" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath fill='%2309a66d' d='M74 12C48 16 25 31 16 54c-7 19 2 30 18 30 29 0 45-30 40-72z'/%3E%3Cpath fill='%23057a52' d='M24 64c18-6 32-22 42-43-6 27-26 49-50 59 2-6 4-11 8-16z'/%3E%3C/svg%3E" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>html{scroll-behavior:smooth}</style>
 </head>
-<body>
-  <h1>歡迎來到我們的新公司！</h1>
-  <p>這裡是官網首頁</p>
+<body class="text-slate-800">
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-2">
+        <svg class="w-7 h-7" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#09a66d" d="M74 12C48 16 25 31 16 54c-7 19 2 30 18 30 29 0 45-30 40-72z"/><path fill="#057a52" d="M24 64c18-6 32-22 42-43-6 27-26 49-50 59 2-6 4-11 8-16z"/></svg>
+        <span class="font-bold">作物健康管理顧問</span>
+      </a>
+      <!-- Desktop nav -->
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#why" class="hover:text-emerald-700">願景使命</a>
+        <a href="services.html" class="hover:text-emerald-700">服務方案</a>
+        <a href="articles.html" class="hover:text-emerald-700">技術文章</a>
+        <a href="contact.html" class="px-3 py-1.5 rounded-full bg-emerald-600 text-white hover:bg-emerald-700">聯絡我</a>
+      </nav>
+      <!-- Mobile trigger -->
+      <button id="menuBtn" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border text-slate-600" aria-label="開啟選單">
+        <svg id="iconOpen" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg id="iconClose" class="hidden w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Mobile panel -->
+    <div id="mobileNav" class="md:hidden hidden border-t">
+      <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-sm">
+        <a href="#why" class="block px-2 py-2 rounded hover:bg-emerald-50">願景使命</a>
+        <a href="services.html" class="block px-2 py-2 rounded hover:bg-emerald-50">服務方案</a>
+        <a href="articles.html" class="block px-2 py-2 rounded hover:bg-emerald-50">技術文章</a>
+        <a href="contact.html" class="block px-2 py-2 rounded bg-emerald-600 text-white text-center">聯絡我</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-emerald-50 to-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+      <div class="max-w-3xl">
+        <h1 class="text-3xl md:text-5xl font-extrabold leading-tight">作物健康管理顧問－邱其德<br class="hidden md:block"/>讓作物<strong class="text-emerald-700">健康生長</strong>、<strong class="text-emerald-700">產量品質倍增</strong></h1>
+        <p class="mt-4 text-slate-600">用 <strong>碳氮營養平衡</strong> 與 <strong>科學管理數據</strong>，為農企業與農民建立長期有意義的土地關係。</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="https://lin.ee/Kx6ygdI" target="_blank" class="px-5 py-3 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">加入 LINE＠</a>
+          <a href="https://www.facebook.com/profile.php?id=61580671342032" target="_blank" class="px-5 py-3 rounded-xl border border-slate-300 hover:border-emerald-600">Facebook 粉專</a>
+          <a href="contact.html" class="px-5 py-3 rounded-xl border border-slate-300 hover:border-emerald-600">聯絡表單與 QR 碼</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why/Vision -->
+  <section id="why" class="py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid md:grid-cols-3 gap-6">
+      <div class="p-6 rounded-2xl bg-white border shadow-sm">
+        <h3 class="text-lg font-semibold">專業設定</h3>
+        <p class="mt-2 text-slate-600">協助客戶栽培出健康作物，使產量品質倍增的「農作物健康技術顧問」。</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-white border shadow-sm">
+        <h3 class="text-lg font-semibold">願景</h3>
+        <p class="mt-2 text-slate-600">讓作物健康生長以提升耕地的產量與質量，保護地球土地環境。</p>
+      </div>
+      <div class="p-6 rounded-2xl bg-white border shadow-sm">
+        <h3 class="text-lg font-semibold">使命</h3>
+        <p class="mt-2 text-slate-600">協助關注作物健康與品質的農企業與農民，學習正確施肥與科學管理，建立土地與作物的長期關係。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Preview -->
+  <section class="py-14 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between">
+        <h2 class="text-2xl md:text-3xl font-bold">服務方案</h2>
+        <a href="services.html" class="text-emerald-700 hover:underline">看完整方案 →</a>
+      </div>
+      <div class="mt-6 grid md:grid-cols-3 gap-6">
+        <div class="p-6 bg-white rounded-2xl border shadow-sm">
+          <h3 class="font-semibold">農企業專屬顧問</h3>
+          <p class="mt-2 text-slate-600">建立自有肥培流程、契作農友培訓、穩定供應與競爭力。</p>
+        </div>
+        <div class="p-6 bg-white rounded-2xl border shadow-sm">
+          <h3 class="font-semibold">農民成長與分潤</h3>
+          <p class="mt-2 text-slate-600">技術＋資材套組、預購分潤與創業輔導，助你從農民邁向農企業主。</p>
+        </div>
+        <div class="p-6 bg-white rounded-2xl border shadow-sm">
+          <h3 class="font-semibold">一般民眾</h3>
+          <p class="mt-2 text-slate-600">免費線上課、會員農產品與天然無毒資材選購。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Preview -->
+  <section class="py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-end justify-between">
+        <h2 class="text-2xl md:text-3xl font-bold">技術文章</h2>
+        <a href="articles.html" class="text-emerald-700 hover:underline">看所有文章 →</a>
+      </div>
+      <div class="mt-6 grid md:grid-cols-2 gap-6">
+        <a href="pomelo.html" class="block p-6 bg-white rounded-2xl border shadow-sm hover:border-emerald-600">
+          <h3 class="font-semibold">文旦品質升級全攻略</h3>
+          <p class="mt-2 text-slate-600">花前到採後的完整 SOP：控氮、防薊馬、催甜與採後樹勢調整。</p>
+        </a>
+        <a href="mango.html" class="block p-6 bg-white rounded-2xl border shadow-sm hover:border-emerald-600">
+          <h3 class="font-semibold">芒果年年開花的祕密</h3>
+          <p class="mt-2 text-slate-600">結果枝 C/N 比、兩段式凍葒與遇雨修正，擺脫大小年。</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="py-14 bg-emerald-600">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-white">
+      <div class="md:flex items-center justify-between gap-6">
+        <h2 class="text-2xl md:text-3xl font-bold">把文章變成你的田區 SOP</h2>
+        <div class="mt-4 md:mt-0 flex flex-wrap gap-3">
+          <a href="contact.html" class="px-5 py-3 rounded-xl bg-white text-emerald-700">聯絡表單與 QR 碼</a>
+          <a href="https://lin.ee/Kx6ygdI" target="_blank" class="px-5 py-3 rounded-xl border border-white">加入 LINE＠</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t py-8 text-sm">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-slate-500">
+        <svg class="w-5 h-5" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#09a66d" d="M74 12C48 16 25 31 16 54c-7 19 2 30 18 30 29 0 45-30 40-72z"/><path fill="#057a52" d="M24 64c18-6 32-22 42-43-6 27-26 49-50 59 2-6 4-11 8-16z"/></svg>
+        <span>© <span id="year"></span> 作物健康管理顧問｜邱其德</span>
+      </div>
+      <div class="text-slate-500"><a class="underline" href="#top">回到頂部</a></div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const btn = document.getElementById('menuBtn');
+    const mobile = document.getElementById('mobileNav');
+    const openI = document.getElementById('iconOpen');
+    const closeI = document.getElementById('iconClose');
+    btn.addEventListener('click', ()=>{
+      mobile.classList.toggle('hidden');
+      openI.classList.toggle('hidden');
+      closeI.classList.toggle('hidden');
+    });
+  </script>
 </body>
 </html>
