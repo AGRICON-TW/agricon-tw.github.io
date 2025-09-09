@@ -157,5 +157,27 @@
       closeI.classList.toggle('hidden');
     });
   </script>
+  <script>
+  // --- Page View Counter (CountAPI) ---
+  (async () => {
+    const el = document.getElementById('pvCounter');
+    if(!el) return;
+    try {
+      // namespace/key 可自行更名（建議用你的網域或 GitHub repo 名稱）
+      const namespace = "crop-health-consultant";
+      const key = "homepage";
+      const url = `https://api.countapi.xyz/hit/${namespace}/${key}`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (typeof data.value === "number") {
+        el.textContent = data.value.toLocaleString();
+      } else {
+        el.textContent = "—";
+      }
+    } catch (err) {
+      el.textContent = "—";
+    }
+  })();
+</script>
 </body>
 </html>
