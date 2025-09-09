@@ -52,9 +52,6 @@
           <a href="https://www.facebook.com/profile.php?id=61580671342032" target="_blank" class="px-5 py-3 rounded-xl border border-slate-300 hover:border-emerald-600">Facebook 粉專</a>
           <a href="contact.html" class="px-5 py-3 rounded-xl border border-slate-300 hover:border-emerald-600">聯絡表單與 QR 碼</a>
         </div>
-          <div class="mt-4 text-sm text-slate-500">
-            本站累積訪客數：<span id="pvCounter" class="tabular-nums">—</span>
-          </div>
           <!-- counterAPI library, insert anywhere on the page. -->
           <script src="https://counterapi.com/c.js" async ></script>
           <!-- Add the counter instance somewhere to your template... -->
@@ -161,27 +158,5 @@
       closeI.classList.toggle('hidden');
     });
   </script>
-  <script>
-  // --- Page View Counter (CountAPI) ---
-  (async () => {
-    const el = document.getElementById('pvCounter');
-    if(!el) return;
-    try {
-      // namespace/key 可自行更名（建議用你的網域或 GitHub repo 名稱）
-      const namespace = "crop-health-consultant";
-      const key = "homepage";
-      const url = `https://api.countapi.xyz/hit/${namespace}/${key}`;
-      const res = await fetch(url);
-      const data = await res.json();
-      if (typeof data.value === "number") {
-        el.textContent = data.value.toLocaleString();
-      } else {
-        el.textContent = "—";
-      }
-    } catch (err) {
-      el.textContent = "—";
-    }
-  })();
-</script>
 </body>
 </html>
