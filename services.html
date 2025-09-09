@@ -58,5 +58,18 @@
       </div>
     </div>
   </main>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const btn = document.getElementById('menuBtn');
+    const mobile = document.getElementById('mobileNav');
+    const openI = document.getElementById('iconOpen');
+    const closeI = document.getElementById('iconClose');
+    btn.addEventListener('click', ()=>{
+      mobile.classList.toggle('hidden');
+      openI.classList.toggle('hidden');
+      closeI.classList.toggle('hidden');
+    });
+  </script>
+
 </body>
 </html>
