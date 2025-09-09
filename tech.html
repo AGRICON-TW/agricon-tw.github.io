@@ -11,18 +11,38 @@
   <style>html{scroll-behavior:smooth}</style>
 </head>
 <body class="text-slate-800">
+   <!-- Header -->
   <header class="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <a href="index.html" class="flex items-center gap-2">
         <svg class="w-7 h-7" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#09a66d" d="M74 12C48 16 25 31 16 54c-7 19 2 30 18 30 29 0 45-30 40-72z"/><path fill="#057a52" d="M24 64c18-6 32-22 42-43-6 27-26 49-50 59 2-6 4-11 8-16z"/></svg>
         <span class="font-bold">作物健康管理顧問</span>
       </a>
+      <!-- Desktop nav -->
       <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#why" class="hover:text-emerald-700">願景使命</a>
         <a href="services.html" class="hover:text-emerald-700">服務方案</a>
-        <a href="articles.html" class="hover:text-emerald-700">技術文章</a>
         <a href="tech.html" class="hover:text-emerald-700">關鍵技術</a>
+        <a href="articles.html" class="hover:text-emerald-700">技術文章</a>
+        <a href="team.html" class="hover:text-emerald-700">合作團隊</a>
         <a href="contact.html" class="px-3 py-1.5 rounded-full bg-emerald-600 text-white hover:bg-emerald-700">聯絡我</a>
       </nav>
+      <!-- Mobile trigger -->
+      <button id="menuBtn" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg border text-slate-600" aria-label="開啟選單">
+        <svg id="iconOpen" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <svg id="iconClose" class="hidden w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <!-- Mobile panel -->
+    <div id="mobileNav" class="md:hidden hidden border-t">
+      <div class="max-w-7xl mx-auto px-4 py-3 grid gap-2 text-sm">
+        <a href="#why" class="block px-2 py-2 rounded hover:bg-emerald-50">願景使命</a>
+        <a href="services.html" class="block px-2 py-2 rounded hover:bg-emerald-50">服務方案</a>
+        <a href="tech.html" class="block px-2 py-2 rounded hover:bg-emerald-50">關鍵技術</a>
+        <a href="articles.html" class="block px-2 py-2 rounded hover:bg-emerald-50">技術文章</a>
+        <a href="team.html" class="block px-2 py-2 rounded hover:bg-emerald-50">合作團隊</a>
+        <a href="contact.html" class="block px-2 py-2 rounded bg-emerald-600 text-white text-center">聯絡我</a>
+      </div>
     </div>
   </header>
 
