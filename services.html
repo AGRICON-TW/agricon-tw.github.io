@@ -58,6 +58,17 @@
       </div>
     </div>
   </main>
+  
+  <footer class="border-t py-8 text-sm">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2 text-slate-500">
+        <svg class="w-5 h-5" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#09a66d" d="M74 12C48 16 25 31 16 54c-7 19 2 30 18 30 29 0 45-30 40-72z"/><path fill="#057a52" d="M24 64c18-6 32-22 42-43-6 27-26 49-50 59 2-6 4-11 8-16z"/></svg>
+        <span>© <span id="year"></span> 作物健康管理顧問</span>
+      </div>
+      <div class="text-slate-500"><a class="underline" href="#top">回到頂部</a></div>
+    </div>
+  </footer>
+  
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
     const btn = document.getElementById('menuBtn');
