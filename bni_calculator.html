@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026年新制紅綠燈快速計算表</title>
+    <style>
+        :root {
+            --bni-red: #CF2030; /* BNI 標準紅 */
+            --bni-burgundy: #861F25;
+            --traffic-green: #28a745;
+            --traffic-yellow: #ffc107;
+            --traffic-red: #dc3545;
+            --traffic-grey: #6c757d;
+        }
+
+        body {
+            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
+            background-color: var(--bni-red);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, var(--bni-red), var(--bni-burgundy));
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .header p {
+            margin: 10px 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Traffic Light Display */
+        .score-board {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .traffic-light {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            background-color: var(--traffic-grey);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+            transition: background-color 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .total-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        /* Tips Section */
+        .tips {
+            background-color: #e8f4fd;
+            border-left: 5px solid #2196F3;
+            padding: 15px;
+            margin: 15px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border-radius: 4px;
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 0 20px 20px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 15px;
+        }
+
+        .input-group:last-child {
+            border-bottom: none;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .label-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .item-score {
+            font-weight: bold;
+            color: var(--bni-red);
+            font-size: 1.1rem;
+        }
+
+        .desc-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--bni-red);
+            outline: none;
+        }
+
+        /* Range indicators */
+        .ranges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 8px;
+        }
+        .badge {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            background: #eee;
+            border-radius: 10px;
+            color: #555;
+        }
+        .badge.active {
+            background: var(--bni-red);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: #fff;
+            opacity: 0.8;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .pop {
+            animation: pulse 0.3s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>2026年新制紅綠燈快速計算表</h1>
+            <p>BNI Traffic Lights Calculator</p>
+        </div>
+
+        <div class="score-board">
+            <div class="score-label">預估總分</div>
+            <div class="traffic-light" id="lightIcon">
+                <span id="face">😐</span>
+            </div>
+            <div class="total-score" id="totalScore">0</div>
+            <div id="statusText" style="margin-top:5px; font-weight:bold; color:#666;">灰燈</div>
+        </div>
+
+        <div class="tips">
+            <strong>📊 數據來源：</strong><br>
+            請打開手機 <b>BNI Connect APP</b> ➜ 點擊下方選單「報告」或個人檔案 ➜ 選擇畫面中的 <b>“6個月”</b> 統計數據。
+        </div>
+
+        <div class="form-section">
+            
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">📅 1. 出缺席次數</span>
+                    <span class="item-score" id="score1">0 分</span>
+                </div>
+                <input type="number" id="input1" placeholder="輸入缺席次數 (例如: 1)" min="0" oninput="calc()">
+                <div class="desc-text">滿分10分。缺席超過4次將開放專業別。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge1-1">0-1次: 10分</span>
+                    <span class="badge" id="badge1-2">2-3次: 5分</span>
+                    <span class="badge" id="badge1-3">4次以上: 0分</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">🎓 2. 培訓學分 (CEU)</span>
+                    <span class="item-score" id="score2">0 分</span>
+                </div>
+                <input type="number" id="input2" placeholder="輸入累積學分 (例如: 13)" min="0" oninput="calc()">
+                <div class="desc-text">滿分10分。包含線上培訓、Podcast與實體培訓。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge2-1">12分以上: 10分</span>
+                    <span class="badge" id="badge2-2">1-12分: 5分</span>
+                    <span class="badge" id="badge2-3">0分: 0分</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">🤝 3. 一對一次數</span>
+                    <span class="item-score" id="score3">0 分</span>
+                </div>
+                <input type="number" id="input3" placeholder="輸入次數 (例如: 26)" min="0" oninput="calc()">
+                <div class="desc-text">滿分20分。這是建立信任的基礎。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge3-1">26次以上: 20分</span>
+                    <span class="badge" id="badge3-2">20-25次: 15分</span>
+                    <span class="badge" id="badge3-3">13-19次: 10分</span>
+                    <span class="badge" id="badge3-4">7-12次: 5分</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">👥 4. 來賓數量</span>
+                    <span class="item-score" id="score4">0 分</span>
+                </div>
+                <input type="number" id="input4" placeholder="輸入人數 (例如: 5)" min="0" oninput="calc()">
+                <div class="desc-text">滿分25分。來賓是分會壯大的養分。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge4-1">5位+: 25分</span>
+                    <span class="badge" id="badge4-2">4位: 20分</span>
+                    <span class="badge" id="badge4-3">3位: 15分</span>
+                    <span class="badge" id="badge4-4">2位: 10分</span>
+                    <span class="badge" id="badge4-5">1位: 5分</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">🌟 5. 來賓轉職為夥伴</span>
+                    <span class="item-score" id="score5">0 分</span>
+                </div>
+                <input type="number" id="input5" placeholder="輸入成功入會人數" min="0" oninput="calc()">
+                <div class="desc-text">滿分5分。成功讓一位來賓轉職為夥伴即得分。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge5-1">1位以上: 5分</span>
+                    <span class="badge" id="badge5-2">0位: 0分</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">📄 6. 提供的引薦單</span>
+                    <span class="item-score" id="score6">0 分</span>
+                </div>
+                <input type="number" id="input6" placeholder="輸入張數 (例如: 33)" min="0" oninput="calc()">
+                <div class="desc-text">滿分25分。付出者收穫的核心。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge6-1">33張+: 25分</span>
+                    <span class="badge" id="badge6-2">26-32張: 20分</span>
+                    <span class="badge" id="badge6-3">20-25張: 15分</span>
+                    <span class="badge" id="badge6-4">13-19張: 10分</span>
+                    <span class="badge" id="badge6-5">7-12張: 5分</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="label-row">
+                    <span class="label-title">💰 7. 引薦金額 (感謝單)</span>
+                    <span class="item-score" id="score7">0 分</span>
+                </div>
+                <input type="number" id="input7" placeholder="輸入金額 (單位: 元)" min="0" oninput="calc()">
+                <div class="desc-text">滿分5分。您為夥伴帶來的實際生意。</div>
+                <div class="ranges">
+                    <span class="badge" id="badge7-1">>78萬: 5分</span>
+                    <span class="badge" id="badge7-2">39-78萬: 4分</span>
+                    <span class="badge" id="badge7-3">13-39萬: 3分</span>
+                    <span class="badge" id="badge7-4">5.2-13萬: 2分</span>
+                    <span class="badge" id="badge7-5"><5.2萬: 1分</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="footer">
+        © 2026 BNI New System Calculator
+    </div>
+
+    <script>
+        function calc() {
+            let total = 0;
+
+            // 1. 出缺席 (Absence)
+            // 0-1: 10, 2-3: 5, >=4: 0
+            let v1 = parseInt(document.getElementById('input1').value) || 0;
+            let s1 = 0;
+            resetBadges('badge1');
+            if (v1 <= 1) { s1 = 10; activeBadge('badge1-1'); }
+            else if (v1 <= 3) { s1 = 5; activeBadge('badge1-2'); }
+            else { s1 = 0; activeBadge('badge1-3'); }
+            updateScore('score1', s1);
+            total += s1;
+
+            // 2. 培訓 (CEU)
+            // >12: 10, 1-12: 5, 0: 0
+            let v2 = parseInt(document.getElementById('input2').value) || 0;
+            let s2 = 0;
+            resetBadges('badge2');
+            if (v2 > 12) { s2 = 10; activeBadge('badge2-1'); }
+            else if (v2 >= 1) { s2 = 5; activeBadge('badge2-2'); }
+            else { s2 = 0; activeBadge('badge2-3'); }
+            updateScore('score2', s2);
+            total += s2;
+
+            // 3. 一對一 (1-to-1)
+            // >=26: 20, 20-25: 15, 13-19: 10, 7-12: 5, 0-6: 0
+            let v3 = parseInt(document.getElementById('input3').value) || 0;
+            let s3 = 0;
+            resetBadges('badge3');
+            if (v3 >= 26) { s3 = 20; activeBadge('badge3-1'); }
+            else if (v3 >= 20) { s3 = 15; activeBadge('badge3-2'); }
+            else if (v3 >= 13) { s3 = 10; activeBadge('badge3-3'); }
+            else if (v3 >= 7) { s3 = 5; activeBadge('badge3-4'); }
+            updateScore('score3', s3);
+            total += s3;
+
+            // 4. 來賓 (Visitors)
+            // >=5: 25, 4: 20, 3: 15, 2: 10, 1: 5, 0: 0
+            let v4 = parseInt(document.getElementById('input4').value) || 0;
+            let s4 = 0;
+            resetBadges('badge4');
+            if (v4 >= 5) { s4 = 25; activeBadge('badge4-1'); }
+            else if (v4 == 4) { s4 = 20; activeBadge('badge4-2'); }
+            else if (v4 == 3) { s4 = 15; activeBadge('badge4-3'); }
+            else if (v4 == 2) { s4 = 10; activeBadge('badge4-4'); }
+            else if (v4 == 1) { s4 = 5; activeBadge('badge4-5'); }
+            updateScore('score4', s4);
+            total += s4;
+
+            // 5. 來賓入會 (Sponsoring)
+            // >=1: 5, 0: 0
+            let v5 = parseInt(document.getElementById('input5').value) || 0;
+            let s5 = 0;
+            resetBadges('badge5');
+            if (v5 >= 1) { s5 = 5; activeBadge('badge5-1'); }
+            else { activeBadge('badge5-2'); }
+            updateScore('score5', s5);
+            total += s5;
+
+            // 6. 給引薦 (Referrals)
+            // >=33: 25, 26-32: 20, 20-25: 15, 13-19: 10, 7-12: 5
+            let v6 = parseInt(document.getElementById('input6').value) || 0;
+            let s6 = 0;
+            resetBadges('badge6');
+            if (v6 >= 33) { s6 = 25; activeBadge('badge6-1'); }
+            else if (v6 >= 26) { s6 = 20; activeBadge('badge6-2'); }
+            else if (v6 >= 20) { s6 = 15; activeBadge('badge6-3'); }
+            else if (v6 >= 13) { s6 = 10; activeBadge('badge6-4'); }
+            else if (v6 >= 7) { s6 = 5; activeBadge('badge6-5'); }
+            updateScore('score6', s6);
+            total += s6;
+
+            // 7. 金額 (TYFCB)
+            // >=780k: 5, >=390k: 4, >=130k: 3, >=52k: 2, >=1: 1
+            let v7 = parseInt(document.getElementById('input7').value) || 0;
+            let s7 = 0;
+            resetBadges('badge7');
+            if (v7 >= 780000) { s7 = 5; activeBadge('badge7-1'); }
+            else if (v7 >= 390000) { s7 = 4; activeBadge('badge7-2'); }
+            else if (v7 >= 130000) { s7 = 3; activeBadge('badge7-3'); }
+            else if (v7 >= 52000) { s7 = 2; activeBadge('badge7-4'); }
+            else if (v7 >= 1) { s7 = 1; activeBadge('badge7-5'); }
+            updateScore('score7', s7);
+            total += s7;
+
+            // Update Total and UI
+            let scoreEl = document.getElementById('totalScore');
+            scoreEl.innerText = total;
+            
+            // Add pop animation
+            scoreEl.classList.remove('pop');
+            void scoreEl.offsetWidth; // trigger reflow
+            scoreEl.classList.add('pop');
+
+            updateTrafficLight(total);
+        }
+
+        function updateScore(id, score) {
+            document.getElementById(id).innerText = score + " 分";
+        }
+
+        function resetBadges(prefix) {
+            let badges = document.querySelectorAll(`[id^="${prefix}-"]`);
+            badges.forEach(b => b.classList.remove('active'));
+        }
+
+        function activeBadge(id) {
+            let el = document.getElementById(id);
+            if(el) el.classList.add('active');
+        }
+
+        function updateTrafficLight(score) {
+            const light = document.getElementById('lightIcon');
+            const face = document.getElementById('face');
+            const status = document.getElementById('statusText');
+            
+            // Rules:
+            // 70-100 Green
+            // 50-69 Yellow
+            // 30-49 Red
+            // 0-29 Grey
+            
+            if (score >= 70) {
+                light.style.backgroundColor = "var(--traffic-green)";
+                face.innerText = "😎";
+                status.innerText = "綠燈 - 績效卓越";
+                status.style.color = "var(--traffic-green)";
+            } else if (score >= 50) {
+                light.style.backgroundColor = "var(--traffic-yellow)";
+                face.innerText = "🙂";
+                status.innerText = "黃燈 - 尚可接受";
+                status.style.color = "var(--traffic-yellow)";
+            } else if (score >= 30) {
+                light.style.backgroundColor = "var(--traffic-red)";
+                face.innerText = "😨";
+                status.innerText = "紅燈 - 需要加油";
+                status.style.color = "var(--traffic-red)";
+            } else {
+                light.style.backgroundColor = "var(--traffic-grey)";
+                face.innerText = "💀";
+                status.innerText = "灰燈 - 瀕臨考核";
+                status.style.color = "var(--traffic-grey)";
+            }
+        }
+    </script>
+</body>
+</html>
