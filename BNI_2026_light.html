@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2026年新制紅綠燈快速計算表</title>
+  <style>
+    :root{
+      --bni-red:#c8102e;
+      --card:#ffffff;
+      --muted:#f6f6f7;
+      --text:#1f2937;
+      --sub:#4b5563;
+      --border:#e5e7eb;
+      --shadow: 0 10px 25px rgba(0,0,0,.12);
+      --radius:16px;
+    }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color:var(--text);
+      background: linear-gradient(135deg, var(--bni-red) 0%, #a80c23 55%, #7a0818 100%);
+      min-height:100vh;
+    }
+    header{
+      padding: 22px 16px 10px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .title{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      flex-wrap:wrap;
+      color:white;
+    }
+    .badge{
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.25);
+      padding: 6px 10px;
+      border-radius:999px;
+      font-size: 13px;
+      backdrop-filter: blur(6px);
+    }
+    h1{
+      margin:0;
+      font-size: clamp(22px, 3vw, 34px);
+      letter-spacing: .5px;
+    }
+    .subtitle{
+      margin: 10px 0 0;
+      color: rgba(255,255,255,.9);
+      line-height: 1.5;
+      font-size: 14.5px;
+      max-width: 980px;
+    }
+
+    main{
+      max-width:1100px;
+      margin: 12px auto 34px;
+      padding: 0 16px 24px;
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 16px;
+    }
+    @media (max-width: 980px){
+      main{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.2);
+      overflow:hidden;
+    }
+    .card-head{
+      padding: 14px 16px;
+      background: linear-gradient(0deg, #fff 0%, #fff 45%, var(--muted) 100%);
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .card-head h2{
+      margin:0;
+      font-size: 16px;
+    }
+    .hint{
+      margin: 6px 0 0;
+      color: var(--sub);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--sub);
+      font-size: 13px;
+      white-space:nowrap;
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    thead th{
+      text-align:left;
+      padding: 12px 14px;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+      color:#111827;
+      font-size: 13px;
+    }
+    tbody td{
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tbody tr:last-child td{ border-bottom: none; }
+    .col-item{ width: 22%; min-width: 160px; }
+    .col-rule{ width: 48%; }
+    .col-input{ width: 15%; min-width: 140px; }
+    .col-score{ width: 15%; min-width: 120px; }
+
+    .item{
+      display:flex;
+      align-items:flex-start;
+      gap: 10px;
+      font-weight: 700;
+    }
+    .icon{
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      display:grid;
+      place-items:center;
+      border-radius: 10px;
+      background: #fff0f2;
+      border: 1px solid #ffd1d8;
+    }
+    .icon span{ font-size: 18px; }
+    .rule{
+      color: var(--sub);
+      line-height: 1.55;
+    }
+    .rule ul{
+      margin: 6px 0 0 18px;
+      padding: 0;
+    }
+    .rule li{ margin: 4px 0; }
+
+    input[type="number"]{
+      width: 100%;
+      box-sizing:border-box;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 14px;
+      outline:none;
+      transition: box-shadow .15s, border-color .15s;
+    }
+    input[type="number"]:focus{
+      border-color: #fda4af;
+      box-shadow: 0 0 0 4px rgba(253,164,175,.35);
+    }
+    .mini{
+      display:block;
+      margin-top: 6px;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .scorebox{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 10px;
+      font-weight: 700;
+    }
+    .scorebox small{
+      font-weight: 600;
+      color: #6b7280;
+    }
+
+    /* Right panel */
+    .side{
+      padding: 16px;
+    }
+    .big{
+      font-size: 42px;
+      margin: 8px 0 0;
+      letter-spacing: .5px;
+    }
+    .muted{
+      color: var(--sub);
+      line-height: 1.55;
+      font-size: 14px;
+      margin: 8px 0 0;
+    }
+    .light-wrap{
+      margin-top: 14px;
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      padding: 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: #fafafa;
+    }
+    .light{
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      background: #9ca3af; /* default gray */
+      box-shadow: inset 0 -10px 16px rgba(0,0,0,.16);
+      border: 3px solid rgba(255,255,255,.75);
+    }
+    .light-label{
+      display:flex;
+      flex-direction:column;
+      gap: 2px;
+    }
+    .light-label b{ font-size: 16px; }
+    .light-label span{ color: var(--sub); font-size: 13px; }
+
+    .legend{
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow:hidden;
+      background:#fff;
+    }
+    .legend h3{
+      margin:0;
+      padding: 12px 14px;
+      background: #fafafa;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .legend .rows{
+      padding: 10px 14px 14px;
+      display:grid;
+      gap: 10px;
+    }
+    .lg-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--sub);
+    }
+    .dot{
+      width: 14px; height: 14px; border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+    .dot.gray{ background:#9ca3af; }
+    .dot.red{ background:#ef4444; }
+    .dot.yellow{ background:#f59e0b; }
+    .dot.green{ background:#22c55e; }
+
+    .actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+    button{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .btn-primary{
+      background: var(--bni-red);
+      color: white;
+      box-shadow: 0 8px 18px rgba(200,16,46,.25);
+    }
+    .btn-ghost{
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+    footer{
+      max-width:1100px;
+      margin: 0 auto;
+      padding: 0 16px 28px;
+      color: rgba(255,255,255,.92);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+    .kbd{
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.28);
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="title">
+      <span class="badge">BNI｜2026 新制</span>
+      <h1>2026年新制紅綠燈快速計算表</h1>
+    </div>
+    <p class="subtitle">
+      📌 <b>數據來源提醒：</b>請打開手機 <b>Connect APP</b> → 選擇畫面中的 <b>「6個月」</b> 統計數據，
+      將各項目顯示的數字輸入到此頁面，即可自動計算紅綠燈成績與燈號。
+    </p>
+  </header>
+
+  <main>
+    <!-- Left: table -->
+    <section class="card">
+      <div class="card-head">
+        <div>
+          <h2>輸入區（26 週／半年）</h2>
+          <div class="hint">把 Connect APP（6個月）看到的數字填進來，系統會自動算分。</div>
+        </div>
+        <div class="pill" title="燈號會隨分數自動變動">🚦 自動換燈</div>
+      </div>
+
+      <div style="overflow:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-item">項目</th>
+              <th class="col-rule">計分規則（半年 26 週）</th>
+              <th class="col-input">輸入數字</th>
+              <th class="col-score">本項得分</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>📅</span></div>
+                  <div>1) 出缺席</div>
+                </div>
+                <span class="mini">滿分：10 分（調降）</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「缺席次數」：
+                  <ul>
+                    <li>缺席 ≤ 1 次：10 分</li>
+                    <li>缺席 2–3 次：5 分</li>
+                    <li>缺席 ≥ 4 次：0 分（開放專業別）</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="absences" type="number" min="0" step="1" value="0" inputmode="numeric" />
+                <span class="mini">缺席次數</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-absences">0</span></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>🎓</span></div>
+                  <div>2) 培訓分數</div>
+                </div>
+                <span class="mini">滿分：10 分（調降）</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「累積學分」：
+                  <ul>
+                    <li>學分 &gt; 12：10 分</li>
+                    <li>學分 1–12：5 分</li>
+                    <li>學分 = 0：0 分</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="credits" type="number" min="0" step="0.5" value="0" inputmode="decimal" />
+                <span class="mini">累積學分</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-credits">0</span></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>🤝</span></div>
+                  <div>3) 一對一</div>
+                </div>
+                <span class="mini">滿分：20 分（調高）</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「一對一次數」：
+                  <ul>
+                    <li>≥ 26 次：20 分</li>
+                    <li>20–25 次：15 分</li>
+                    <li>13–19 次：10 分</li>
+                    <li>7–12 次：5 分</li>
+                    <li>0–6 次：0 分</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="one2one" type="number" min="0" step="1" value="0" inputmode="numeric" />
+                <span class="mini">一對一次數</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-one2one">0</span></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>🧑‍🤝‍🧑</span></div>
+                  <div>4) 來賓數量</div>
+                </div>
+                <span class="mini">滿分：25 分（調高）</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「累積來賓數」：
+                  <ul>
+                    <li>≥ 5 位：25 分</li>
+                    <li>4 位：20 分</li>
+                    <li>3 位：15 分</li>
+                    <li>2 位：10 分</li>
+                    <li>1 位：5 分</li>
+                    <li>0 位：0 分</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="guests" type="number" min="0" step="1" value="0" inputmode="numeric" />
+                <span class="mini">來賓人數</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-guests">0</span></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>✨</span></div>
+                  <div>5) 來賓入會</div>
+                </div>
+                <span class="mini">加分：+5 分</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「半年內是否成功讓來賓入會」：
+                  <ul>
+                    <li>是（≥ 1 位）：+5 分</li>
+                    <li>否（0 位）：0 分</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="guestToMember" type="number" min="0" step="1" value="0" inputmode="numeric" />
+                <span class="mini">成功入會人數</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-guestToMember">0</span></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>🧾</span></div>
+                  <div>6) 給引薦</div>
+                </div>
+                <span class="mini">滿分：25 分（調高）</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「引薦張數」：
+                  <ul>
+                    <li>≥ 33 張：25 分</li>
+                    <li>26–32 張：20 分</li>
+                    <li>20–25 張：15 分</li>
+                    <li>13–19 張：10 分</li>
+                    <li>7–12 張：5 分</li>
+                    <li>0–6 張：0 分</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="referrals" type="number" min="0" step="1" value="0" inputmode="numeric" />
+                <span class="mini">引薦張數</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-referrals">0</span></div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="col-item">
+                <div class="item">
+                  <div class="icon"><span>💰</span></div>
+                  <div>7) 引薦金額</div>
+                </div>
+                <span class="mini">滿分：5 分（調降）</span>
+              </td>
+              <td class="col-rule">
+                <div class="rule">
+                  輸入「半年內感謝單總金額（元）」：
+                  <ul>
+                    <li>≥ 780,000：5 分</li>
+                    <li>&gt; 390,000 且 &lt; 780,000：4 分</li>
+                    <li>&gt; 130,000 且 &lt; 390,000：3 分</li>
+                    <li>&gt; 52,000 且 &lt; 130,000：2 分</li>
+                    <li>&gt; 0 且 &lt; 52,000：1 分</li>
+                    <li>0：0 分</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="col-input">
+                <input id="thanksAmount" type="number" min="0" step="1" value="0" inputmode="numeric" />
+                <span class="mini">金額（元）</span>
+              </td>
+              <td class="col-score">
+                <div class="scorebox"><small>分數</small><span id="score-thanksAmount">0</span></div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Right: results -->
+    <aside class="card side">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+        <div>
+          <div class="pill">🧮 自動加總</div>
+          <div class="big"><span id="totalScore">0</span> <span style="font-size:16px; color:var(--sub); font-weight:700;">/ 100</span></div>
+          <div class="muted">
+            將上方數據填入後，系統會依規則自動計算總分與燈號。<br/>
+            ✅ 建議：每次分會結束就更新一次，隨時掌握自己的節奏。
+          </div>
+        </div>
+      </div>
+
+      <div class="light-wrap" aria-live="polite">
+        <div class="light" id="trafficLight"></div>
+        <div class="light-label">
+          <b id="lightName">灰燈</b>
+          <span id="lightRange">總分 0–29</span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <h3>燈號對照</h3>
+        <div class="rows">
+          <div class="lg-row"><div style="display:flex; align-items:center; gap:8px;"><span class="dot gray"></span>灰燈</div><div>0–29</div></div>
+          <div class="lg-row"><div style="display:flex; align-items:center; gap:8px;"><span class="dot red"></span>紅燈</div><div>30–49</div></div>
+          <div class="lg-row"><div style="display:flex; align-items:center; gap:8px;"><span class="dot yellow"></span>黃燈</div><div>50–69</div></div>
+          <div class="lg-row"><div style="display:flex; align-items:center; gap:8px;"><span class="dot green"></span>綠燈</div><div>70–100</div></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn-primary" id="btnCopy">📋 複製目前總分與燈號</button>
+        <button class="btn-ghost" id="btnReset">↩️ 全部歸零</button>
+      </div>
+
+      <p class="muted" style="margin-top: 12px;">
+        🔎 <b>小提醒</b>：本頁不會上傳你的資料，所有計算都在你的裝置本地完成。
+      </p>
+    </aside>
+  </main>
+
+  <footer>
+    使用方式：打開 <span class="kbd">Connect APP</span> → 選擇 <span class="kbd">6個月</span> 統計 → 將數字輸入本頁即可。<br/>
+    若分會規則更新，你可以直接修改本檔案（HTML）中的規則區塊與計算邏輯。
+  </footer>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    function clamp(n, min, max){
+      n = Number.isFinite(n) ? n : 0;
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function calcAbsences(absences){
+      if (absences <= 1) return 10;
+      if (absences <= 3) return 5;
+      return 0;
+    }
+
+    function calcCredits(credits){
+      if (credits > 12) return 10;
+      if (credits >= 1) return 5;
+      return 0;
+    }
+
+    function calcOne2One(n){
+      if (n >= 26) return 20;
+      if (n >= 20) return 15;
+      if (n >= 13) return 10;
+      if (n >= 7) return 5;
+      return 0;
+    }
+
+    function calcGuests(n){
+      if (n >= 5) return 25;
+      if (n === 4) return 20;
+      if (n === 3) return 15;
+      if (n === 2) return 10;
+      if (n === 1) return 5;
+      return 0;
+    }
+
+    function calcGuestToMember(n){
+      return (n >= 1) ? 5 : 0;
+    }
+
+    function calcReferrals(n){
+      if (n >= 33) return 25;
+      if (n >= 26) return 20;
+      if (n >= 20) return 15;
+      if (n >= 13) return 10;
+      if (n >= 7) return 5;
+      return 0;
+    }
+
+    function calcThanksAmount(amount){
+      if (amount >= 780000) return 5;
+      if (amount > 390000) return 4;
+      if (amount > 130000) return 3;
+      if (amount > 52000) return 2;
+      if (amount > 0) return 1;
+      return 0;
+    }
+
+    function getLight(total){
+      // 0–29 gray, 30–49 red, 50–69 yellow, 70–100 green
+      if (total >= 70) return {name:"綠燈", range:"總分 70–100", color:"#22c55e"};
+      if (total >= 50) return {name:"黃燈", range:"總分 50–69", color:"#f59e0b"};
+      if (total >= 30) return {name:"紅燈", range:"總分 30–49", color:"#ef4444"};
+      return {name:"灰燈", range:"總分 0–29", color:"#9ca3af"};
+    }
+
+    function readInputs(){
+      return {
+        absences: clamp(parseInt($("absences").value || "0", 10), 0, 9999),
+        credits: clamp(parseFloat($("credits").value || "0"), 0, 9999),
+        one2one: clamp(parseInt($("one2one").value || "0", 10), 0, 9999),
+        guests: clamp(parseInt($("guests").value || "0", 10), 0, 9999),
+        guestToMember: clamp(parseInt($("guestToMember").value || "0", 10), 0, 9999),
+        referrals: clamp(parseInt($("referrals").value || "0", 10), 0, 9999),
+        thanksAmount: clamp(parseInt($("thanksAmount").value || "0", 10), 0, 999999999),
+      };
+    }
+
+    function update(){
+      const v = readInputs();
+
+      const s1 = calcAbsences(v.absences);
+      const s2 = calcCredits(v.credits);
+      const s3 = calcOne2One(v.one2one);
+      const s4 = calcGuests(v.guests);
+      const s5 = calcGuestToMember(v.guestToMember);
+      const s6 = calcReferrals(v.referrals);
+      const s7 = calcThanksAmount(v.thanksAmount);
+
+      $("score-absences").textContent = s1;
+      $("score-credits").textContent = s2;
+      $("score-one2one").textContent = s3;
+      $("score-guests").textContent = s4;
+      $("score-guestToMember").textContent = s5;
+      $("score-referrals").textContent = s6;
+      $("score-thanksAmount").textContent = s7;
+
+      let total = s1 + s2 + s3 + s4 + s5 + s6 + s7;
+      total = clamp(total, 0, 100); // safety
+      $("totalScore").textContent = total;
+
+      const light = getLight(total);
+      $("trafficLight").style.background = light.color;
+      $("lightName").textContent = light.name;
+      $("lightRange").textContent = light.range;
+    }
+
+    // Bind events
+    ["absences","credits","one2one","guests","guestToMember","referrals","thanksAmount"].forEach(id=>{
+      $(id).addEventListener("input", update);
+      $(id).addEventListener("change", update);
+    });
+
+    $("btnReset").addEventListener("click", ()=>{
+      ["absences","credits","one2one","guests","guestToMember","referrals","thanksAmount"].forEach(id=>{
+        $(id).value = 0;
+      });
+      update();
+    });
+
+    $("btnCopy").addEventListener("click", async ()=>{
+      const total = $("totalScore").textContent;
+      const name = $("lightName").textContent;
+      const text = `BNI 2026 新制紅綠燈成績：${total} 分（${name}）`;
+      try{
+        await navigator.clipboard.writeText(text);
+        $("btnCopy").textContent = "✅ 已複製";
+        setTimeout(()=> $("btnCopy").textContent = "📋 複製目前總分與燈號", 1400);
+      }catch(e){
+        alert("你的瀏覽器不允許自動複製。請手動選取並複製：\n" + text);
+      }
+    });
+
+    // Initial render
+    update();
+  </script>
+</body>
+</html>
