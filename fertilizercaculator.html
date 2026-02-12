@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌾 簡易肥料混拌計算機</title>
+    <style>
+        body { font-family: "微軟正黑體", sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        label { display: block; margin-top: 10px; font-weight: bold; color: #34495e; }
+        select, input, button { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { background-color: #27ae60; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 15px; }
+        button:hover { background-color: #219150; }
+        button.delete-btn { background-color: #e74c3c; width: auto; padding: 5px 10px; margin: 0; font-size: 14px; }
+        
+        .result-box { margin-top: 25px; padding: 15px; background-color: #e8f6f3; border-radius: 8px; border-left: 5px solid #1abc9c; }
+        .result-item { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 18px; }
+        .result-item span { font-weight: bold; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: center; }
+        th { background-color: #f8f9fa; color: #7f8c8d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌾 簡易肥料混拌計算機</h2>
+    
+    <label for="fertSelect">1. 選擇肥料種類</label>
+    <select id="fertSelect"></select>
+
+    <label for="weightInput">2. 輸入重量 (公斤)</label>
+    <input type="number" id="weightInput" placeholder="例如：25" min="0">
+
+    <button onclick="addFertilizer()">➕ 加入清單</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>肥料名稱</th>
+                <th>重量(kg)</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="listBody">
+            </tbody>
+    </table>
+
+    <div class="result-box" id="resultBox" style="display:none;">
+        <h3 style="margin-top:0;">📊 計算結果</h3>
+        <div class="result-item">總重量： <span id="totalW">0</span> kg</div>
+        <hr>
+        <div class="result-item" style="color:#e67e22;">氮 (N)： <span id="resN">0</span> %</div>
+        <div class="result-item" style="color:#2980b9;">磷 (P)： <span id="resP">0</span> %</div>
+        <div class="result-item" style="color:#8e44ad;">鉀 (K)： <span id="resK">0</span> %</div>
+    </div>
+    
+    <button onclick="resetAll()" style="background-color: #95a5a6; margin-top: 20px;">🔄 全部清除重算</button>
+</div>
+
+<script>
+    // --- 這裡就是您的資料庫 (直接內嵌) ---
+    const fertilizers = [
+        {name: '硫酸銨', n: 21, p: 0, k: 0},
+        {name: '過磷酸鈣（粉）', n: 0, p: 18, k: 0},
+        {name: '磷酸一鉀', n: 0, p: 52, k: 34},
+        {name: '氯化鉀(紅咖哩）', n: 0, p: 0, k: 60},
+        {name: '硫酸鉀', n: 0, p: 0, k: 50},
+        {name: '尿素', n: 46, p: 0, k: 0},
+        {name: '硝酸鈣', n: 15, p: 0, k: 0},
+        {name: '硝酸鉀', n: 15, p: 0, k: 45},
+        {name: '1號複肥', n: 20, p: 5, k: 10},
+        {name: '4號複肥', n: 11, p: 5.5, k: 22},
+        {name: '5號複肥', n: 16, p: 8, k: 12},
+        {name: '39號複肥', n: 12, p: 18, k: 12},
+        {name: '43號複肥', n: 15, p: 15, k: 15},
+        {name: '複肥20-20-20', n: 20, p: 20, k: 20},
+        {name: '即溶複肥1號', n: 26, p: 13, k: 13},
+        {name: '即溶複肥4號', n: 14, p: 28, k: 14},
+        {name: '即溶複肥5號', n: 10, p: 20, k: 20},
+        {name: '即溶複肥6號', n: 5, p: 18, k: 18},
+        {name: '即溶複肥43號', n: 15, p: 15, k: 15}
+    ];
+
+    const select = document.getElementById('fertSelect');
+    const listBody = document.getElementById('listBody');
+    let currentList = [];
+
+    // 初始化下拉選單
+    fertilizers.forEach((f, index) => {
+        let option = document.createElement('option');
+        option.value = index;
+        option.text = f.name + ` (N:${f.n}-P:${f.p}-K:${f.k})`;
+        select.add(option);
+    });
+
+    function addFertilizer() {
+        const index = select.value;
+        const weight = parseFloat(document.getElementById('weightInput').value);
+        
+        if (!weight || weight <= 0) {
+            alert("請輸入正確的重量！");
+            return;
+        }
+
+        const fert = fertilizers[index];
+        currentList.push({ ...fert, w: weight });
+        
+        renderTable();
+        calculate();
+        document.getElementById('weightInput').value = ''; // 清空輸入框
+    }
+
+    function removeFertilizer(index) {
+        currentList.splice(index, 1);
+        renderTable();
+        calculate();
+    }
+
+    function renderTable() {
+        listBody.innerHTML = "";
+        currentList.forEach((item, idx) => {
+            let row = `<tr>
+                <td>${item.name}</td>
+                <td>${item.w}</td>
+                <td><button class="delete-btn" onclick="removeFertilizer(${idx})">刪除</button></td>
+            </tr>`;
+            listBody.innerHTML += row;
+        });
+    }
+
+    function calculate() {
+        if (currentList.length === 0) {
+            document.getElementById('resultBox').style.display = 'none';
+            return;
+        }
+
+        let totalW = 0, totalN = 0, totalP = 0, totalK = 0;
+
+        currentList.forEach(item => {
+            totalW += item.w;
+            totalN += item.w * (item.n / 100);
+            totalP += item.w * (item.p / 100);
+            totalK += item.w * (item.k / 100);
+        });
+
+        document.getElementById('totalW').innerText = totalW.toFixed(1);
+        document.getElementById('resN').innerText = ((totalN / totalW) * 100).toFixed(1);
+        document.getElementById('resP').innerText = ((totalP / totalW) * 100).toFixed(1);
+        document.getElementById('resK').innerText = ((totalK / totalW) * 100).toFixed(1);
+        
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function resetAll() {
+        currentList = [];
+        renderTable();
+        calculate();
+    }
+</script>
+
+</body>
+</html>
