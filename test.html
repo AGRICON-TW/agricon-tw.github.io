@@ -3,203 +3,316 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>農好事～藥劑肥料輕鬆算</title>
     
-    <title>植物生長調節劑安全嗎？8大植物激素功效、誤區與正確使用守則</title>
-    
-    <meta name="description" content="植物生長調節劑就是植物賀爾蒙嗎？跟環境賀爾蒙的差別在哪？本文專家解析生長素、勃激素、乙烯等 4 大常用植物激素的功能、在農作上的應用，以及如何合法安全使用，破除食安恐懼，兼顧農產品品質與產量！">
-    
-    <meta name="keywords" content="植物生長調節劑,植物激素,植物賀爾蒙,農藥安全,勃激素,乙烯,生物刺激素,農產品品質">
-    
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <style>
-        /* 基礎樣式設定，讓文字更容易閱讀 */
+        /* --- 基礎設定 --- */
         body {
-            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif, "Microsoft JhengHei", "微軟正黑體";
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f7f4;
             margin: 0;
             padding: 20px;
+            color: #333;
+            display: flex;
+            justify_content: center;
+            align-items: center;
+            min-height: 100vh;
         }
-        /* 讓內容區塊更集中，方便閱讀 */
+
         .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background-color: #ffffff; /* 讓內容區塊維持白色背景，與綠色背景區隔 */
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2, h3 {
-            color: #2F4F4F; /* 深色標題 */
-        }
-        table {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+            max-width: 500px;
+            padding: 25px;
+            box-sizing: border-box;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
+
+        h1 {
+            color: #2e7d32;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            line-height: 1.2;
         }
-        th {
-            background-color: #f2f2f2;
+
+        /* --- 分頁切換按鈕 (Tabs) --- */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #2e7d32;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background-color: white;
+            color: #2e7d32;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        /* --- 輸入區塊樣式 --- */
+        .form-group { margin-bottom: 20px; }
+        
+        label {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1b5e20;
+        }
+
+        /* 下拉選單樣式 */
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #a5d6a7;
+            border-radius: 10px;
+            background-color: #fff;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e7d32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5em;
+        }
+
+        /* 自行輸入框樣式 */
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border: 2px solid #2e7d32;
+            border-radius: 10px;
+            box-sizing: border-box; /* 確保寬度包含邊框 */
+            background-color: #f9fff9;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3);
+        }
+
+        /* 隱藏/顯示控制 */
+        .hidden { display: none; }
+
+        /* --- 結果顯示區 --- */
+        .result-box {
+            background-color: #e8f5e9;
+            border: 2px dashed #66bb6a;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .result-title { font-size: 1.1rem; color: #555; margin-bottom: 5px; }
+        .result-value { font-size: 2.5rem; font-weight: bold; color: #c62828; display: block; }
+        .result-unit { font-size: 1.1rem; color: #333; }
+
+        .calc-btn {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* PWA 安裝按鈕區 */
+        #installContainer {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        #installBtn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            cursor: pointer;
         }
     </style>
 </head>
-<body style="background-color: #E6F7E6;"> 
+<body>
+
     <div class="container">
+        <h1>🌱 農好事<br><span style="font-size:0.8em; color:#666;">藥劑肥料輕鬆算</span></h1>
 
-        <h1>【植物生長調節劑全解析】8大植物激素功效、安全性與正確使用指南</h1>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchMode('select')" id="tab-select">常用速查</button>
+            <button class="tab-btn" onclick="switchMode('custom')" id="tab-custom">自行輸入</button>
+        </div>
 
-        <p>植物生長調節劑又稱「<strong>植物賀爾蒙</strong>」、「<strong>植物激素</strong>」，雖然名稱中帶有「賀爾蒙」或「生長激素」，但目前法令核准應用於農作物栽培的生長調節劑種類，都與動物系統或令人聞之色變的環境賀爾蒙，<strong>絕對不能混為一談</strong>。</p>
+        <div id="panel-select">
+            <div class="form-group">
+                <label>稀釋倍數</label>
+                <select id="dilution" onchange="calculate()">
+                    <option value="100">100 倍</option>
+                    <option value="200">200 倍</option>
+                    <option value="300">300 倍</option>
+                    <option value="400">400 倍</option>
+                    <option value="500">500 倍</option>
+                    <option value="800">800 倍</option>
+                    <option value="1000" selected>1000 倍 (預設)</option>
+                    <option value="1500">1500 倍</option>
+                    <option value="2000">2000 倍</option>
+                    <option value="3000">3000 倍</option>
+                    <option value="5000">5000 倍</option>
+                    <option value="10000">10000 倍</option>
+                    <option value="20000">20000 倍</option>
+                    <option value="50000">50000 倍</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>用水量 (公升)</label>
+                <select id="water" onchange="calculate()">
+                    <option value="10">10 公升</option>
+                    <option value="16" selected>16 公升 (背桶)</option>
+                    <option value="20">20 公升</option>
+                    <option value="25">25 公升 (動力桶)</option>
+                    <option value="120">120 公升</option>
+                    <option value="200">200 公升 (大桶)</option>
+                    <option value="300">300 公升</option>
+                    <option value="500">500 公升</option>
+                    <option value="1000">1000 公升 (一噸)</option>
+                </select>
+            </div>
+        </div>
 
-        <p>目前國際上公認的植物生長調節劑有八大類，分別是：</p>
-        <ul>
-            <li><strong>生長素類</strong> (Auxins)</li>
-            <li><strong>勃激素類</strong> (Gibberellins, GAs)</li>
-            <li><strong>細胞分裂素類</strong> (Cytokinins CTKs)</li>
-            <li><strong>離層酸</strong> (Abscisic acid, ABA)</li>
-            <li><strong>乙烯</strong> (Ethylene, ETH)</li>
-            <li><strong>油菜素甾體類</strong> (Brassinosteroids, BRs)</li>
-            <li><strong>茉莉酸類</strong> (Jasmonates, JAs)</li>
-            <li><strong>水楊酸類</strong> (Salicylates, SAs)</li>
-        </ul>
-        <p>其中，已廣泛用於農業領域的有生長素、勃激素、細胞分裂素以及乙烯這<strong>四大類植物激素</strong>。這些植物激素分別在植物生長各階段扮演不同卻又重要的關鍵角色。</p>
+        <div id="panel-custom" class="hidden">
+            <div class="form-group">
+                <label>請輸入稀釋倍數</label>
+                <input type="number" id="custom-dilution" placeholder="例如：450" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label>請輸入用水量 (公升)</label>
+                <input type="number" id="custom-water" placeholder="例如：100" oninput="calculate()">
+            </div>
+        </div>
 
-        <h2>🧪 植物激素與動物賀爾蒙差異：消除食安疑慮</h2>
-        <p>生長調節劑是生物體用來調控自我生理機能運作的一群生化物質，可以許多生理活動的進行，掌管生物體的成長、成熟、繁殖與衰老...等生理機能。以植物為例，植物成長過程中細胞需要不斷地細胞分裂增生，而細胞分裂增生的過程就需要有足夠的細胞分裂素與生長素，兩者維持特定的濃度比例才能使植物不斷地長高茁壯。</p>
-        <p>由於動物與植物的生理代謝系統具有極大的差異，因此所需的賀爾蒙型態自然也大相逕庭。換句話說，動植物彼此擁有獨立自主的賀爾蒙運作系統，<strong>鮮少對彼此的生長發育互相干擾</strong>。</p>
-        <p>除此之外，植物類的賀爾蒙無論是在複雜度或分子大小，都和動物類賀爾蒙差異極大。加上農用生長調節劑產品必需取得<strong>合法登記與銷售資格</strong>，若不能通過對人體與環境的<strong>安全性審查</strong>，自然無法進口與製造使用。所以只要選擇合格的生長調節劑產品，並遵照使用方式，安全就有保障。</p>
+        <button class="calc-btn" onclick="calculate()">計算使用量</button>
 
-        <h2>🎯 四大常用植物激素的功能與農業應用</h2>
+        <div class="result-box">
+            <div class="result-title">請加入藥劑 / 肥料</div>
+            <span id="resultValue" class="result-value">0</span>
+            <span class="result-unit">毫升(cc) 或 公克(g)</span>
+        </div>
 
-        <p>從功能分類來看，植物生長調節劑可大致分為以下類別。下表為四大常用植物激素的詳細功能與應用：</p>
+        <div id="installContainer">
+            <button id="installBtn">📲 下載 App 到桌面</button>
+        </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>植物激素類別</th>
-                    <th>簡稱</th>
-                    <th>主要生理功能</th>
-                    <th>農業應用舉例</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>生長素類</strong></td>
-                    <td>Auxins</td>
-                    <td>促進細胞伸長、頂芽優勢、根系發育</td>
-                    <td>促進<strong>根系生長</strong>、提高雌花數量</td>
-                </tr>
-                <tr>
-                    <td><strong>勃激素類</strong></td>
-                    <td>GAs</td>
-                    <td>促進細胞伸長肥大、打破休眠、誘導單性結果</td>
-                    <td>作為<strong>促進果實肥大</strong>及打破種子休眠</td>
-                </tr>
-                <tr>
-                    <td><strong>細胞分裂素類</strong></td>
-                    <td>CKs</td>
-                    <td>促進細胞分裂、打破頂芽優勢、延遲老化</td>
-                    <td>增加分蘗與側芽數量、促進果實著果催大</td>
-                </tr>
-                <tr>
-                    <td><strong>乙烯</strong></td>
-                    <td>ETH</td>
-                    <td>促進鳳梨開花、促進老化與成熟</td>
-                    <td><strong>果實轉色、催熟</strong>、抑制新梢生長、鳳梨催花</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h3>1. 生長素類 (Auxins, 如:IAA、IBA、NAA)：促進根系與頂芽生長</h3>
-        <p>主要存在於植物新生組織(如嫩芽、嫩葉、根尖等)。生長素可促進細胞伸長與肥大、調控莖葉向陽/向地性、使植物具備頂芽優勢、並往地下部運送以促進根系發育、高濃度會促進乙烯生合成(促進鳳梨開花)、促進果實肥大(細胞分裂數量增加)、改變雌/雄花比例(提高雌花數量)等作用。</p>
-        
-        <h3>2. 勃激素類 (Gibberellins, GAs, 如GA3、GA7)：使果實催大、莖幹伸長</h3>
-        <p>主要存在於植物發育中組織。勃激素可促進細胞伸長與肥大、促進種子發芽、打破休眠、延遲葉片老化、誘導長日照植物或需要低溫處理之二年生植物開花、誘導單性結果(如無籽葡萄、番茄、胡瓜、茄子、甜椒、梨、蘋果等)、 改變雌/雄花比例(提高雄花數量)等作用。</p>
-        
-        <h3>3. 細胞分裂素類 (Cytokinins, CK, 如6-BA、Zeatin)：促進分蘗、促進生長</h3>
-        <p>主要是植物根尖部位合成，再往地上部(莖、葉)運移。細胞分裂素可促進細胞分裂活動(但須要有生長素存在才會發揮作用)、促進細胞分化(癒傷組織的形成)、打破頂芽優勢(所以側芽會大量發生)、延遲葉片及花器的老化、促進發芽、促進花芽分化、延遲落果、誘導塊莖形成等作用。</p>
-
-        <h3>4. 乙烯 (Ethylene, ETH)：果實催熟、後熟</h3>
-        <p>幾乎所有的植物器官都會產生乙烯。乙烯可以抑制莖部生長(促進莖的肥大)、促進不定根形成、促進鳳梨科植物開花、維持頂芽優勢、促進雌花形成、促進花與葉片的老化、促進果實成熟與著色，相對也會加速老化並促進花、果實與葉片的脫落等作用。</p>
-        
-
-        <h2>💰 植物激素為何被廣泛使用？市場需求與農民困境</h2>
-        <p>我們最常用的就是果實催大的勃激素類(GA家族)與促進果實轉色、催熟的乙烯類(電土、益收)、或者近年來逐漸流行起來,作為葡萄轉色用的茉莉酸類。使用他們不外乎就是為了提高蔬果的賣相。試想,我們走進市場,兩顆水果,一個又大又鮮豔的,另一個看起來不怎麼樣,撇開價格不談,我們比較喜歡哪一個?俗話說「人要衣裝、佛要金裝」,賣水果當然也不例外。</p>
-        <p>當然,蔬果想要提高品質,良好的管理基本功夫才是根本。但我們也是人,有時候操作稍微不到位或不夠細膩時,適當使用生長調節劑確實能夠發揮臨門一腳的效果,幫助我們提高管理效率,提升蔬果的品質。</p>
-        <p>另外,很多水果例如荔枝、小番茄及文旦等,因為種子具有先天/後天性的缺陷,無法自行分泌或著果賀爾蒙(抗離層酸)不足,著果率普遍不高,這樣的情況若拒絕使用生長調節劑來促進著果,產量大減是一定的。若能利用適合的調節劑,產量就能維持在一定的水準之上。</p>
-
-        <h2>🗣️ 破除迷思：專家教你分辨植物生長調節劑的謠言</h2>
-        <p>然而在食安議題受到國人重視的同時,許多假專家利用以非科學與不理性的方式,胡扯攻擊與抹黑植物生長調節劑,甚至用恐嚇的手段來行銷自己的商品,嚴重損害其他守法的競爭者與農民的利益。所以我們認為有必要提供正確的「植物生長調節劑」與其的利弊資訊,讓大家徹底了解而減少不必要的恐懼。</p>
-
-        <h3>過度依賴植物激素的副作用：對作物與品質的影響</h3>
-        <p>農作物遇到逆境的時候會啟動自我保護機制,例如果樹開了很多花之後,卻發現自己承受不住,所以大量落花落果;或者是結果量太多,只好每一個果實都小小顆長不太大。這些情況都是農作物自我保護的方式,但卻不一定是農民所樂見的情形。因此這個時候生長調節劑就有發揮的空間了。不想要大量落花落果,那就給果樹著果賀爾蒙,讓花或果實不要全部掉光;果實不夠大,那就給果樹勃激素,強迫果實長大。</p>
-        <p>利用植物激素使作物朝我們想要的方向生長效果雖好,但也常出現兩個較大的問題:(1)強留果實造成作物植株負荷過重,逐漸走向衰敗,(2)品相提高了但品質下降,名不符實的產品葬送全體產業形象。</p>
-        <h4>植物激素是預支植物儲蓄的碳水化合物,只出不進遲早破產</h4>
-        <p>有些生理現象(例如生理落花、落果)其實是植物的自我保護機制啟動,當環境不利時,使用外來的生長調節劑來強迫植物生育,其實也是強迫植物消耗自己過儲蓄的營養來滿足市場的期待。偶爾為之可以稱作"調節",但如果長期壓榨作物,又沒有留給作物足夠的時間與養分,幫助作物恢復健康並蓄積足夠碳水化合物,久而久之,病蟲害就會開始上身,作物也會越來越衰弱,最後就是走向死亡。</p>
-        <h4>植物激素也像水果界的醫美,但好看又有內在,才能走得長遠</h4>
-        <p>一顆顆又紅又大的草莓,是使用勃激素來增大草莓體積,提高賣相與賣價的一種操作方式。但是變大顆了,這些多出來的"體積"裡面,裝得是什麼?這時候就變得很重要了!</p>
-        <p>試想,如果作物能夠累積的碳水化合物是固定的量,若要再提高產量,勢必傳統營養元素就會分散(特別是供應速度原本就較慢的鈣與硼元素),若沒有額外的養分與足夠的時間,這些多出來的體積,會水份為主,當然這樣就得付出品質低劣、不耐儲藏、容易裂、轉色不佳...等代價,打壞招牌,破壞市場價格。因此,在使用植物激素的同時,同時應注意營養元素的補充與使用的時間間隔,才不會顧此失彼。</p>
-        <p>另外這兩三年的另一個例子是發生在彰化溪湖的溫室春果葡萄,葡萄果農為了搶快上市,對尚未成熟的葡萄果實以「茉莉酸丙酯」類的生長調節劑來促進葡萄果實著色,第一年果然成功地在市場上一炮而紅,美麗的外表擄獲無數消費者目光,因為數量稀少又漂亮,拍賣價格讓農民可是笑得合不攏嘴。但好景不常,用這種方式生產出來的葡萄因為名不符實,外觀亮眼但風味實在是讓人苟同,更讓消費者對春果葡萄的印象大壞,有些甚至在上市後還出現了返青退色的情況,這些負面消息的累積,不但破壞了今年的春果葡萄市場,最後受害最大的,還是農民自己。</p>
-
-        <h2>✅ 合法植物激素產品安全嗎？法規、代謝與檢測解析</h2>
-        
-        <h3>許可上市的產品安全性極高</h3>
-        <p>現行合法允許使用的植物生長調節劑都非常安全,具有對動物毒性極低、可代謝且半衰期快,只要我們農民認明具有農藥登記證的合格生長調節劑,基本上都是能安心使用喔!</p>
-        
-        <h3>農藥殘留檢測的迷思</h3>
-        <p>雖然依現行法規,植物激素目前隸屬於農藥管理法的管轄範圍內,但有趣的是,農產品的農藥檢測項目中,除了少數非天然的植物激素(如巴克素,是一種人工合成的勃激素受體抑制劑,主要用來抑制莖幹的生長,其半衰殘留期於土壤中可達一年以上)會檢測之外,多數從天然植物激素衍伸而來的種類都不會檢測。</p>
-        <p>這是因為農作物植物在生長過程中,自然會有內生性植物激素以調節本身生長所需使用,所以無論如何都會檢測到激素的存在。而大多數仿天然植物激素的產品安全性高、對動物毒性低,代謝又快,再加上實際使用的有效濃度極低(數ppm甚至是ppb)、衰退速度快,到採收時,基本上是無法以檢驗的方式分辨出有無使用之差異。</p>
-        <p>至於對環境及生物體的安全有風險的產品,也在世界各國農業科學家與我國防檢局的努力之下,不斷地修正安全性評估,對於疑似有害者都要強制退場。(例如低濃度可促進著果,高濃度可殺雙子葉雜草的2-4D,本身安全性高,但生產過程中會殘存極微量的不純物「戴奧辛」,戴奧辛是被科學證實為對人體具有累積性與危害的環境賀爾蒙,目前已被部分國家禁止使用),所以真的不用過於擔心植物激素會不會有問題。</p>
-        
-        <h2>🔧 植物激素正確使用方式：配合營養補充才能兼顧品質產量</h2>
-        <p>植物激素的應用最大關鍵,在於後續的營養補充是否能夠同步滿足作物生長所需。一般來說,多數的植物生長調節劑的有效濃度很低即能發揮促進生長的效果,但若沒有配合適當的給肥給水,效果會打折,或者有副作用產生。若是作物本身不夠強健,無法供應足夠的營養與碳水化合物,則容易產生裂果、裂柄的情形。這時候補充足夠的碳水化合物與肥料以降低副作用產生,兼顧產量提升與農產品品質。</p>
-        <p>值得注意的是,有些朋友的性子急,習慣用高倍數噴灑,希望能今天噴完,明天就有感。但超速通常只會帶來傷害。農作物本身有一定的養分供應速度,供應不及就是會產生問題。因此要使用生長調節劑,麻煩真的要調整一下心態</p>
-        <p>讓我們放慢腳步,少量多次並配合合理養分補充,我們的農作物自然會給我們最好的回饋!</p>
-
-        <h2>🌿 知識補充：植物激素 vs. 生物刺激素，兩者有何不同？</h2>
-        <p>這幾年資材界中掀起一陣「生物刺激素」風潮,相關產品如雨後春筍般地冒出來。依照歐盟生物刺激素聯盟的定義:「生物刺激素是包含某些成分和(或)微生物的物質,當施用於作物或其根圈附近時,能夠促進作物的生理代謝,增強營養物質的吸收及利用,提升對環境的抗逆性,改善植物健康狀況以及土壤活性。很小的施用量就可以提高植物的生長和發育。」。</p>
-
-        <p>就分子結構而言,植物賀爾蒙分子是有特定結構的化學純物質,生物刺激素則多是一群複雜的有機分子的混合物,也有部分是單一特定化學分子。</p>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>比較項目</th>
-                    <th>植物激素 (植物賀爾蒙)</th>
-                    <th>生物刺激素</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>定義</strong></td>
-                    <td>具有特定結構的<strong>化學純物質</strong>，直接作用於生理代謝路徑的上下游基因調控。</td>
-                    <td>一群複雜的<strong>有機分子混合物</strong>或特定分子，透過增強營養吸收與抗逆性來促進生長。</td>
-                </tr>
-                <tr>
-                    <td><strong>作用機制</strong></td>
-                    <td><strong>直接</strong>作用於生理代謝，產生明確的單一效果（如強制生長、催熟）。</td>
-                    <td><strong>間接</strong>提高作物對營養物質的吸收與利用效率，效果較溫和。</td>
-                </tr>
-                <tr>
-                    <td><strong>常見類型</strong></td>
-                    <td>生長素、勃激素、乙烯等。</td>
-                    <td>腐植酸、胺基酸、甲殼素、海藻萃取物、微生物發酵代謝物等。</td>
-                </tr>
-            </tbody>
-        </table>
-        <p>以作用機制來區分的話,生物刺激素是提高作物對營養物質的吸收與利用,激素則是直接作用在生理代謝路徑的上下游基因調控。</p>
-        <p>不過就功效而言,生物刺激素因為是透過改善營養吸收的方式來協助蔬果長大,相對來說效果也比較溫和一點,使用上當然可以更安心不少,但相對地也容易受到作物栽培環境條件的影響。但這邊還是要囉嗦一下,生物刺激素雖然效果較溫和,但任何資材或營養只要過量,就必然會出現反效果,所以用量還是得注意一下比較好唷</p>
-
-        <hr>
-        <h3>🌟 總結與行動建議</h3>
-        <p>植物生長調節劑的種類非常多,但常用的其實就那幾種,而且都很安全。只要挑選合法有登記的來使用,自然能免於食安風險。另外生長調節劑雖然好用,但我們仍須注意使用時機及使用濃度。</p>
-        <p>生長調節劑的作用是強制農作物將體內養分與能量,按照我們的期望去強制分配調整,若我們使用之後的肥培管理沒做到位,或者貪圖速效而擅自改變使用濃度,不但無法達到預期之效果,甚至造成減產、失收。</p>
-        <p>因此我們在使用生長調節劑時,應遵照產品說明書的建議方式,或者向學者專家諮詢後,方能進行使用,以免欲速則不達。</p>
-        <p><strong>慢慢來,穩又快！</strong> 配合營養補充，我們的農作物自然會給我們最好的回饋，兼顧品質與產量。</p>
-        
-        <p>歡迎加入LINE@ ID:nhs168 (農好事一路發),方便大家一起來聊天討論喔!</p>
+        <div style="text-align:center; margin-top:20px; color:#888; font-size:0.9rem;">
+            農作計算小幫手 | 適用於液體與粉劑
+        </div>
     </div>
 
+    <script>
+        // 追蹤當前模式：'select' 或 'custom'
+        let currentMode = 'select';
+
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // 切換按鈕樣式
+            document.getElementById('tab-select').classList.toggle('active', mode === 'select');
+            document.getElementById('tab-custom').classList.toggle('active', mode === 'custom');
+
+            // 切換顯示區塊
+            if (mode === 'select') {
+                document.getElementById('panel-select').classList.remove('hidden');
+                document.getElementById('panel-custom').classList.add('hidden');
+            } else {
+                document.getElementById('panel-select').classList.add('hidden');
+                document.getElementById('panel-custom').classList.remove('hidden');
+            }
+            
+            // 切換時重新計算
+            calculate();
+        }
+
+        function calculate() {
+            let dilution, water;
+
+            if (currentMode === 'select') {
+                // 從下拉選單取值
+                dilution = parseFloat(document.getElementById('dilution').value);
+                water = parseFloat(document.getElementById('water').value);
+            } else {
+                // 從輸入框取值
+                dilution = parseFloat(document.getElementById('custom-dilution').value);
+                water = parseFloat(document.getElementById('custom-water').value);
+            }
+
+            // 防呆：如果數字不完整或為0，顯示0
+            if (!dilution || !water || dilution === 0) {
+                document.getElementById('resultValue').innerText = "0";
+                return;
+            }
+
+            // 計算公式
+            let result = (water * 1000) / dilution;
+
+            // 顯示邏輯
+            let displayResult;
+            if (result < 1) {
+                displayResult = result.toFixed(3);
+            } else if (Number.isInteger(result)) {
+                displayResult = result;
+            } else {
+                displayResult = result.toFixed(1);
+            }
+
+            document.getElementById('resultValue').innerText = displayResult;
+        }
+
+        // 頁面載入時執行一次
+        window.onload = calculate;
+
+        // --- PWA 安裝邏輯 (與之前相同) ---
+        let deferredPrompt;
+        const installContainer = document.getElementById('installContainer');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installContainer.style.display = 'block';
+        });
+
+        document.getElementById('installBtn').addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installContainer.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+    </script>
 </body>
 </html>
