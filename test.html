@@ -41,7 +41,7 @@
             line-height: 1.2;
         }
 
-        /* --- 分頁切換按鈕 (Tabs) --- */
+        /* --- 分頁切換按鈕 --- */
         .tabs {
             display: flex;
             margin-bottom: 20px;
@@ -67,7 +67,7 @@
             color: white;
         }
 
-        /* --- 輸入區塊樣式 --- */
+        /* --- 輸入區塊 --- */
         .form-group { margin-bottom: 20px; }
         
         label {
@@ -78,37 +78,16 @@
             color: #1b5e20;
         }
 
-        /* 下拉選單樣式 */
-        select {
+        select, input[type="number"] {
             width: 100%;
             padding: 15px;
             font-size: 1.2rem;
             border: 2px solid #a5d6a7;
             border-radius: 10px;
+            box-sizing: border-box;
             background-color: #fff;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e7d32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.5em;
         }
-
-        /* 自行輸入框樣式 */
-        input[type="number"] {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            border: 2px solid #2e7d32;
-            border-radius: 10px;
-            box-sizing: border-box; /* 確保寬度包含邊框 */
-            background-color: #f9fff9;
-        }
-
-        input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3);
-        }
-
+        
         /* 隱藏/顯示控制 */
         .hidden { display: none; }
 
@@ -121,40 +100,71 @@
             text-align: center;
             margin-top: 20px;
         }
-
-        .result-title { font-size: 1.1rem; color: #555; margin-bottom: 5px; }
         .result-value { font-size: 2.5rem; font-weight: bold; color: #c62828; display: block; }
         .result-unit { font-size: 1.1rem; color: #333; }
 
-        .calc-btn {
-            width: 100%;
-            background-color: #2e7d32;
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1.3rem;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 10px;
+        /* --- 收藏與分享按鈕區 --- */
+        .action-area {
+            margin-top: 25px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        /* PWA 安裝按鈕區 */
-        #installContainer {
-            margin-top: 20px;
-            text-align: center;
-            display: none;
-            padding-top: 15px;
-            border-top: 1px solid #eee;
-        }
-        #installBtn {
-            background-color: #ff9800;
-            color: white;
+        .btn-action {
+            flex: 1;
+            padding: 12px;
             border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
+            border-radius: 8px;
             font-size: 1rem;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-width: 120px;
+            font-weight: bold;
         }
+
+        .btn-line {
+            background-color: #06c755;
+            color: white;
+        }
+
+        .btn-copy {
+            background-color: #607d8b;
+            color: white;
+        }
+
+        .btn-pwa {
+            background-color: #ff9800;
+            color: white;
+            width: 100%; /* PWA 按鈕獨佔一行 */
+            display: none; /* 預設隱藏 */
+        }
+
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 50px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 17px;
+        }
+        .toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
     </style>
 </head>
 <body>
@@ -171,33 +181,21 @@
             <div class="form-group">
                 <label>稀釋倍數</label>
                 <select id="dilution" onchange="calculate()">
-                    <option value="100">100 倍</option>
-                    <option value="200">200 倍</option>
-                    <option value="300">300 倍</option>
-                    <option value="400">400 倍</option>
                     <option value="500">500 倍</option>
                     <option value="800">800 倍</option>
-                    <option value="1000" selected>1000 倍 (預設)</option>
+                    <option value="1000" selected>1000 倍</option>
                     <option value="1500">1500 倍</option>
                     <option value="2000">2000 倍</option>
                     <option value="3000">3000 倍</option>
-                    <option value="5000">5000 倍</option>
-                    <option value="10000">10000 倍</option>
-                    <option value="20000">20000 倍</option>
-                    <option value="50000">50000 倍</option>
-                </select>
+                    </select>
             </div>
             <div class="form-group">
-                <label>用水量 (公升)</label>
+                <label>用水量</label>
                 <select id="water" onchange="calculate()">
-                    <option value="10">10 公升</option>
                     <option value="16" selected>16 公升 (背桶)</option>
                     <option value="20">20 公升</option>
                     <option value="25">25 公升 (動力桶)</option>
-                    <option value="120">120 公升</option>
-                    <option value="200">200 公升 (大桶)</option>
-                    <option value="300">300 公升</option>
-                    <option value="500">500 公升</option>
+                    <option value="200">200 公升</option>
                     <option value="1000">1000 公升 (一噸)</option>
                 </select>
             </div>
@@ -205,16 +203,14 @@
 
         <div id="panel-custom" class="hidden">
             <div class="form-group">
-                <label>請輸入稀釋倍數</label>
-                <input type="number" id="custom-dilution" placeholder="例如：450" oninput="calculate()">
+                <label>輸入稀釋倍數</label>
+                <input type="number" id="custom-dilution" placeholder="例：450" oninput="calculate()">
             </div>
             <div class="form-group">
-                <label>請輸入用水量 (公升)</label>
-                <input type="number" id="custom-water" placeholder="例如：100" oninput="calculate()">
+                <label>輸入用水量 (公升)</label>
+                <input type="number" id="custom-water" placeholder="例：100" oninput="calculate()">
             </div>
         </div>
-
-        <button class="calc-btn" onclick="calculate()">計算使用量</button>
 
         <div class="result-box">
             <div class="result-title">請加入藥劑 / 肥料</div>
@@ -222,27 +218,41 @@
             <span class="result-unit">毫升(cc) 或 公克(g)</span>
         </div>
 
-        <div id="installContainer">
-            <button id="installBtn">📲 下載 App 到桌面</button>
+        <div class="action-area">
+            <button class="btn-action btn-line" onclick="shareToLine()">
+                Line 收藏
+            </button>
+            
+            <button class="btn-action btn-copy" onclick="copyLink()">
+                複製連結
+            </button>
+
+            <button id="installBtn" class="btn-action btn-pwa">
+                📲 加入手機桌面
+            </button>
         </div>
 
-        <div style="text-align:center; margin-top:20px; color:#888; font-size:0.9rem;">
-            農作計算小幫手 | 適用於液體與粉劑
+        <div style="text-align:center; margin-top:15px; color:#888; font-size:0.8rem;">
+            農作計算小幫手 | 自動記憶上次輸入
         </div>
     </div>
 
+    <div id="toast" class="toast">網址已複製！</div>
+
     <script>
-        // 追蹤當前模式：'select' 或 'custom'
         let currentMode = 'select';
+
+        // 初始化：讀取上次的紀錄
+        window.onload = function() {
+            loadSettings();
+            calculate();
+        };
 
         function switchMode(mode) {
             currentMode = mode;
-            
-            // 切換按鈕樣式
             document.getElementById('tab-select').classList.toggle('active', mode === 'select');
             document.getElementById('tab-custom').classList.toggle('active', mode === 'custom');
-
-            // 切換顯示區塊
+            
             if (mode === 'select') {
                 document.getElementById('panel-select').classList.remove('hidden');
                 document.getElementById('panel-custom').classList.add('hidden');
@@ -250,8 +260,6 @@
                 document.getElementById('panel-select').classList.add('hidden');
                 document.getElementById('panel-custom').classList.remove('hidden');
             }
-            
-            // 切換時重新計算
             calculate();
         }
 
@@ -259,56 +267,94 @@
             let dilution, water;
 
             if (currentMode === 'select') {
-                // 從下拉選單取值
                 dilution = parseFloat(document.getElementById('dilution').value);
                 water = parseFloat(document.getElementById('water').value);
+                // 儲存設定
+                localStorage.setItem('saved_mode', 'select');
+                localStorage.setItem('saved_dilution_select', dilution);
+                localStorage.setItem('saved_water_select', water);
             } else {
-                // 從輸入框取值
                 dilution = parseFloat(document.getElementById('custom-dilution').value);
                 water = parseFloat(document.getElementById('custom-water').value);
+                // 儲存設定
+                localStorage.setItem('saved_mode', 'custom');
+                if(dilution) localStorage.setItem('saved_dilution_custom', dilution);
+                if(water) localStorage.setItem('saved_water_custom', water);
             }
 
-            // 防呆：如果數字不完整或為0，顯示0
             if (!dilution || !water || dilution === 0) {
                 document.getElementById('resultValue').innerText = "0";
                 return;
             }
 
-            // 計算公式
             let result = (water * 1000) / dilution;
-
-            // 顯示邏輯
-            let displayResult;
-            if (result < 1) {
-                displayResult = result.toFixed(3);
-            } else if (Number.isInteger(result)) {
-                displayResult = result;
-            } else {
-                displayResult = result.toFixed(1);
-            }
-
+            let displayResult = (result < 1) ? result.toFixed(3) : (Number.isInteger(result) ? result : result.toFixed(1));
             document.getElementById('resultValue').innerText = displayResult;
         }
 
-        // 頁面載入時執行一次
-        window.onload = calculate;
+        // 讀取歷史設定
+        function loadSettings() {
+            const mode = localStorage.getItem('saved_mode');
+            if (mode === 'custom') {
+                switchMode('custom');
+                document.getElementById('custom-dilution').value = localStorage.getItem('saved_dilution_custom') || '';
+                document.getElementById('custom-water').value = localStorage.getItem('saved_water_custom') || '';
+            } else {
+                // 預設 Select 模式
+                const savedDil = localStorage.getItem('saved_dilution_select');
+                const savedWater = localStorage.getItem('saved_water_select');
+                if (savedDil) document.getElementById('dilution').value = savedDil;
+                if (savedWater) document.getElementById('water').value = savedWater;
+            }
+        }
 
-        // --- PWA 安裝邏輯 (與之前相同) ---
+        // --- 分享功能 ---
+        function shareToLine() {
+            // 取得目前網址
+            const url = encodeURIComponent(window.location.href);
+            // 檢查是否是本地檔案
+            if (window.location.protocol === 'file:') {
+                alert("請先將網頁上傳到網路空間，才能使用 Line 分享喔！");
+                return;
+            }
+            // 開啟 Line 分享頁面
+            window.open('https://line.me/R/msg/text/?' + url + '%0A農好事-藥劑肥料計算機', '_blank');
+        }
+
+        function copyLink() {
+            const dummy = document.createElement('input');
+            const text = window.location.href;
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand('copy');
+            document.body.removeChild(dummy);
+            
+            showToast();
+        }
+
+        function showToast() {
+            const x = document.getElementById("toast");
+            x.className = "toast show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        // --- PWA 安裝邏輯 ---
         let deferredPrompt;
-        const installContainer = document.getElementById('installContainer');
+        const installBtn = document.getElementById('installBtn');
 
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installContainer.style.display = 'block';
+            installBtn.style.display = 'block'; // 有支援才顯示
         });
 
-        document.getElementById('installBtn').addEventListener('click', async () => {
+        installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    installContainer.style.display = 'none';
+                    installBtn.style.display = 'none';
                 }
                 deferredPrompt = null;
             }
