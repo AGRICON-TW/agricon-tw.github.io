@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>農好事～藥劑肥料輕鬆算</title>
+    <style>
+        /* 基礎設定 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f7f4; /* 淺綠色背景 */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            display: flex;
+            justify_content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 卡片容器 */
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px; /* 手機版寬度限制 */
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        /* 標題樣式 */
+        h1 {
+            color: #2e7d32; /* 深綠色 */
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        /* 表單區域 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #1b5e20;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem; /* 大字體方便點選 */
+            border: 2px solid #a5d6a7;
+            border-radius: 10px;
+            background-color: #fff;
+            appearance: none; /* 移除預設箭頭 */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e7d32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5em;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+        }
+
+        /* 結果顯示區 */
+        .result-box {
+            background-color: #e8f5e9;
+            border: 2px dashed #66bb6a;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .result-title {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #c62828; /* 紅色強調數字 */
+        }
+
+        .result-unit {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        /* 按鈕 (雖然會自動算，但加個按鈕比較有儀式感) */
+        button {
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.3rem;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #1b5e20;
+        }
+
+        /* 頁尾 */
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🌱 農好事<br><span style="font-size:0.8em; color:#666;">藥劑肥料輕鬆算</span></h1>
+
+        <div class="form-group">
+            <label for="dilution">請選擇稀釋倍數</label>
+            <select id="dilution" onchange="calculate()">
+                <option value="100">100 倍</option>
+                <option value="200">200 倍</option>
+                <option value="300">300 倍</option>
+                <option value="400">400 倍</option>
+                <option value="500">500 倍</option>
+                <option value="600">600 倍</option>
+                <option value="700">700 倍</option>
+                <option value="800">800 倍</option>
+                <option value="900">900 倍</option>
+                <option value="1000" selected>1000 倍 (預設)</option>
+                <option value="1200">1200 倍</option>
+                <option value="1500">1500 倍</option>
+                <option value="2000">2000 倍</option>
+                <option value="2500">2500 倍</option>
+                <option value="3000">3000 倍</option>
+                <option value="4000">4000 倍</option>
+                <option value="5000">5000 倍</option>
+                <option value="6000">6000 倍</option>
+                <option value="8000">8000 倍</option>
+                <option value="10000">10000 倍</option>
+                <option value="20000">20000 倍</option>
+                <option value="30000">30000 倍</option>
+                <option value="40000">40000 倍</option>
+                <option value="50000">50000 倍</option>
+                <option value="60000">60000 倍</option>
+                <option value="70000">70000 倍</option>
+                <option value="80000">80000 倍</option>
+                <option value="90000">90000 倍</option>
+                <option value="100000">100000 倍</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="water">請選擇用水量 (公升)</label>
+            <select id="water" onchange="calculate()">
+                <option value="10">10 公升</option>
+                <option value="16" selected>16 公升 (一般背桶)</option>
+                <option value="20">20 公升</option>
+                <option value="25">25 公升 (動力桶)</option>
+                <option value="120">120 公升</option>
+                <option value="200">200 公升 (大桶)</option>
+                <option value="300">300 公升</option>
+                <option value="500">500 公升</option>
+                <option value="1000">1000 公升 (一噸水)</option>
+            </select>
+        </div>
+
+        <button onclick="calculate()">計算使用量</button>
+
+        <div class="result-box">
+            <div class="result-title">您需要加入的藥劑/肥料量</div>
+            <span id="resultValue" class="result-value">0</span>
+            <span class="result-unit"> 毫升(cc) 或 公克(g)</span>
+        </div>
+
+        <div class="footer">
+            農作計算小幫手 | 適用於液體與粉劑
+        </div>
+    </div>
+
+    <script>
+        function calculate() {
+            // 取得輸入值
+            const dilution = parseFloat(document.getElementById('dilution').value);
+            const water = parseFloat(document.getElementById('water').value);
+
+            // 計算公式： (水量(L) * 1000) / 稀釋倍數 = 藥量(ml/g)
+            let result = (water * 1000) / dilution;
+
+            // 處理小數位數：如果整除顯示整數，否則顯示小數點後1位
+            // 若數字極小 (小於1)，顯示小數點後2位
+            let displayResult;
+            if (result < 1) {
+                displayResult = result.toFixed(3); // 極高倍數時保留多一點
+            } else if (Number.isInteger(result)) {
+                displayResult = result;
+            } else {
+                displayResult = result.toFixed(1);
+            }
+
+            // 更新畫面
+            document.getElementById('resultValue').innerText = displayResult;
+        }
+
+        // 頁面載入時先算一次
+        window.onload = calculate;
+    </script>
+</body>
+</html>
