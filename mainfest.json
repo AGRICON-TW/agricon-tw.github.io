@@ -1,5 +1,5 @@
 {
-  "name": "農好事-藥劑計算",
+  "name": "農好事-稀釋計算",
   "short_name": "農好事",
   "start_url": "./dilutioncalculator.html",
   "display": "standalone",
