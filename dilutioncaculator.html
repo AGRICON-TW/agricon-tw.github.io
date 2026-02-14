@@ -2,256 +2,393 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>農好事～藥劑肥料輕鬆算</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>農好事～藥劑肥料稀釋輕鬆算</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#2e7d32">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
-        /* 基礎設定 */
+        /* --- 全域設定：強調高對比與易讀性 --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f7f4;
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", sans-serif;
+            background-color: #f4f7f6; /* 淺灰底保護眼睛 */
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 15px;
+            color: #222;
             display: flex;
             justify_content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
         .container {
             background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 500px;
-            padding: 25px;
+            max-width: 550px; /* 手機版寬度 */
+            padding: 20px;
             box-sizing: border-box;
-            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        h1 {
-            color: #2e7d32;
+        /* 標題區 */
+        header {
             text-align: center;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+        
+        h1 {
+            color: #1b5e20; /* 深綠色 */
+            margin: 0;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+        
+        .sub-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
         }
 
-        .form-group { margin-bottom: 20px; }
+        /* --- 分頁切換 (Tabs) --- */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 4px;
+        }
 
+        .tab-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            background: transparent;
+            color: #1b5e20;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background-color: #2e7d32; /* 鮮明綠色 */
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* --- 輸入區塊 --- */
+        .form-group { margin-bottom: 25px; }
+        
         label {
             display: block;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #1b5e20;
+            font-size: 1.3rem; /* 大字體 */
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
         }
 
-        select {
+        /* 巨大化的輸入框與選單，方便手指點擊 */
+        select, input[type="number"] {
             width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            border: 2px solid #a5d6a7;
-            border-radius: 10px;
+            padding: 16px;
+            font-size: 1.3rem;
+            border: 2px solid #81c784;
+            border-radius: 12px;
+            box-sizing: border-box;
             background-color: #fff;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232e7d32' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1.5em;
+            color: #000;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2);
         }
 
+        .hidden { display: none; }
+
+        /* --- 結果顯示區 (強調視覺重點) --- */
         .result-box {
-            background-color: #e8f5e9;
-            border: 2px dashed #66bb6a;
-            border-radius: 10px;
-            padding: 20px;
+            background-color: #fff3e0; /* 淺橘底色突顯結果 */
+            border: 3px solid #ff9800;
+            border-radius: 16px;
+            padding: 25px 10px;
             text-align: center;
-            margin-top: 30px;
+            margin-top: 10px;
+            margin-bottom: 25px;
+        }
+
+        .result-label {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
 
         .result-value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #c62828;
+            font-size: 3.5rem; /* 超大數字 */
+            font-weight: 900;
+            color: #d32f2f; /* 紅色警示色 */
+            line-height: 1.2;
             display: block;
         }
 
-        button.calc-btn {
+        .result-unit {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* --- 按鈕區 (LINE 與 安裝) --- */
+        .action-area {
+            margin-top: auto; /* 推到底部 */
+            display: grid;
+            gap: 15px;
+        }
+
+        .btn {
             width: 100%;
-            background-color: #2e7d32;
-            color: white;
-            border: none;
             padding: 15px;
-            font-size: 1.3rem;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        /* 安裝按鈕樣式 */
-        #installContainer {
-            margin-top: 20px;
-            text-align: center;
-            display: none; /* 預設隱藏，偵測到可安裝才顯示 */
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-
-        #installBtn {
-            background-color: #ff9800; /* 橘色醒目 */
-            color: white;
             border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 20px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 5px;
-        }
-        
-        /* iOS 提示區塊 */
-        #iosInstallPrompt {
-            display: none;
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #555;
-            text-align: left;
+            justify-content: center;
+            text-decoration: none; /* 移除連結下底線 */
+            transition: transform 0.1s;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #888;
+        .btn:active { transform: scale(0.98); }
+
+        /* LINE 按鈕樣式 */
+        .btn-line {
+            background-color: #06c755;
+            color: white;
+            box-shadow: 0 4px 10px rgba(6, 199, 85, 0.3);
         }
+
+        /* PWA 安裝按鈕樣式 */
+        .btn-install {
+            background-color: #424242;
+            color: white;
+            display: none; /* 預設隱藏，程式偵測後顯示 */
+        }
+
+        /* iOS 提示區 */
+        .ios-prompt {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 15px;
+            display: none;
+            border: 1px dashed #999;
+        }
+
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🌱 農好事<br><span style="font-size:0.8em; color:#666;">藥劑肥料輕鬆算</span></h1>
+        <header>
+            <h1>農好事</h1>
+            <div class="sub-title">藥劑肥料稀釋輕鬆算</div>
+        </header>
 
-        <div class="form-group">
-            <label for="dilution">稀釋倍數</label>
-            <select id="dilution" onchange="calculate()">
-                <option value="100">100 倍</option>
-                <option value="200">200 倍</option>
-                <option value="300">300 倍</option>
-                <option value="400">400 倍</option>
-                <option value="500">500 倍</option>
-                <option value="800">800 倍</option>
-                <option value="1000" selected>1000 倍 (預設)</option>
-                <option value="1500">1500 倍</option>
-                <option value="2000">2000 倍</option>
-                <option value="3000">3000 倍</option>
-                <option value="5000">5000 倍</option>
-                <option value="10000">10000 倍</option>
-                <option value="20000">20000 倍</option>
-                <option value="50000">50000 倍</option>
-            </select>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchMode('select')" id="tab-select">快速選單</button>
+            <button class="tab-btn" onclick="switchMode('custom')" id="tab-custom">自行輸入</button>
         </div>
 
-        <div class="form-group">
-            <label for="water">用水量 (公升)</label>
-            <select id="water" onchange="calculate()">
-                <option value="10">10 公升</option>
-                <option value="16" selected>16 公升 (背桶)</option>
-                <option value="20">20 公升</option>
-                <option value="25">25 公升 (動力桶)</option>
-                <option value="120">120 公升</option>
-                <option value="200">200 公升 (大桶)</option>
-                <option value="300">300 公升</option>
-                <option value="500">500 公升</option>
-                <option value="1000">1000 公升 (一噸)</option>
-            </select>
+        <div id="panel-select">
+            <div class="form-group">
+                <label>📋 請選擇稀釋倍數</label>
+                <select id="dilution" onchange="calculate()">
+                    <option value="100">100 倍</option>
+                    <option value="200">200 倍</option>
+                    <option value="300">300 倍</option>
+                    <option value="400">400 倍</option>
+                    <option value="500">500 倍</option>
+                    <option value="600">600 倍</option>
+                    <option value="700">700 倍</option>
+                    <option value="800">800 倍</option>
+                    <option value="900">900 倍</option>
+                    <option value="1000" selected>1000 倍 (預設)</option>
+                    <option value="1200">1200 倍</option>
+                    <option value="1500">1500 倍</option>
+                    <option value="2000">2000 倍</option>
+                    <option value="2500">2500 倍</option>
+                    <option value="3000">3000 倍</option>
+                    <option value="4000">4000 倍</option>
+                    <option value="5000">5000 倍</option>
+                    <option value="6000">6000 倍</option>
+                    <option value="8000">8000 倍</option>
+                    <option value="10000">10000 倍</option>
+                    <option value="20000">20000 倍</option>
+                    <option value="30000">30000 倍</option>
+                    <option value="40000">40000 倍</option>
+                    <option value="50000">50000 倍</option>
+                    <option value="60000">60000 倍</option>
+                    <option value="70000">70000 倍</option>
+                    <option value="80000">80000 倍</option>
+                    <option value="90000">90000 倍</option>
+                    <option value="100000">100000 倍</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>💧 請選擇用水量</label>
+                <select id="water" onchange="calculate()">
+                    <option value="10">10 公升</option>
+                    <option value="16" selected>16 公升 (背桶)</option>
+                    <option value="20">20 公升</option>
+                    <option value="25">25 公升 (動力桶)</option>
+                    <option value="120">120 公升</option>
+                    <option value="200">200 公升 (大桶)</option>
+                    <option value="300">300 公升</option>
+                    <option value="500">500 公升</option>
+                    <option value="1000">1000 公升 (一噸水)</option>
+                </select>
+            </div>
         </div>
 
-        <button class="calc-btn" onclick="calculate()">計算使用量</button>
+        <div id="panel-custom" class="hidden">
+            <div class="form-group">
+                <label>🖊️ 輸入稀釋倍數</label>
+                <input type="number" id="custom-dilution" placeholder="例：450" inputmode="numeric" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label>🖊️ 輸入用水量 (公升)</label>
+                <input type="number" id="custom-water" placeholder="例：100" inputmode="numeric" oninput="calculate()">
+            </div>
+        </div>
 
         <div class="result-box">
-            <div class="result-title">請加入藥劑 / 肥料</div>
-            <span id="resultValue" class="result-value">0</span>
-            <span class="result-unit">毫升(cc) 或 公克(g)</span>
+            <div class="result-label">您需要加入</div>
+            <span id="resultValue" class="result-value">16</span>
+            <div class="result-unit">毫升(cc) 或 公克(g)</div>
         </div>
 
-        <div id="installContainer">
-            <button id="installBtn">📲 下載 App 到桌面</button>
+        <div class="action-area">
+            
+            <button id="installBtn" class="btn btn-install">
+                📲 把【農好事計算器】安裝到桌面
+            </button>
+
+            <a href="https://line.me/R/ti/p/@ghp0573p" target="_blank" class="btn btn-line">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="24" style="margin-right:10px;">
+                加入 LINE 好友諮詢
+            </a>
         </div>
 
-        <div id="iosInstallPrompt">
-            <strong>🍎 iPhone 用戶請這樣做：</strong><br>
-            1. 點擊下方瀏覽器的 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDdlZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAxMnY4YzAgMS4xLjk5NiAyIDIuMDExIDIuMDAxaDEzLjk3OEMyMC4wMDggMjIgMjEgMjEuMSAyMSAyMHYtOCIvPjxwb2x5bGluZSBwb2ludHM9IjE2IDYgMTIgMiA4IDYiLz48bGluZSB4MT0iMTIiIHkxPSIyIiB4Mj0iMTIiIHkyPSIxNSIvPjwvc3ZnPg==" style="vertical-align:middle"> <strong>分享按鈕</strong><br>
-            2. 滑動選單找到並點選 <strong>「加入主畫面」</strong> 即可。
+        <div id="iosPrompt" class="ios-prompt">
+            <strong>🍎 如何加入 iPhone 桌面？</strong><br>
+            1. 點擊下方瀏覽器的「分享按鈕」<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDdlZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAxMnY4YzAgMS4xLjk5NiAyIDIuMDExIDIuMDAxaDEzLjk3OEMyMC4wMDggMjIgMjEgMjEuMSAyMSAyMHYtOCIvPjxwb2x5bGluZSBwb2ludHM9IjE2IDYgMTIgMiA4IDYiLz48bGluZSB4MT0iMTIiIHkxPSIyIiB4Mj0iMTIiIHkyPSIxNSIvPjwvc3ZnPg==" style="vertical-align:middle"><br>
+            2. 滑動選單找到並點選 <strong>「加入主畫面」</strong>
         </div>
 
-        <div class="footer">農作計算小幫手 | 適用於液體與粉劑</div>
     </div>
 
     <script>
+        let currentMode = 'select';
+
+        function switchMode(mode) {
+            currentMode = mode;
+            document.getElementById('tab-select').classList.toggle('active', mode === 'select');
+            document.getElementById('tab-custom').classList.toggle('active', mode === 'custom');
+            
+            if (mode === 'select') {
+                document.getElementById('panel-select').classList.remove('hidden');
+                document.getElementById('panel-custom').classList.add('hidden');
+            } else {
+                document.getElementById('panel-select').classList.add('hidden');
+                document.getElementById('panel-custom').classList.remove('hidden');
+            }
+            calculate();
+        }
+
         function calculate() {
-            const dilution = parseFloat(document.getElementById('dilution').value);
-            const water = parseFloat(document.getElementById('water').value);
+            let dilution, water;
+
+            if (currentMode === 'select') {
+                dilution = parseFloat(document.getElementById('dilution').value);
+                water = parseFloat(document.getElementById('water').value);
+            } else {
+                dilution = parseFloat(document.getElementById('custom-dilution').value);
+                water = parseFloat(document.getElementById('custom-water').value);
+            }
+
+            if (!dilution || !water || dilution === 0) {
+                document.getElementById('resultValue').innerText = "0";
+                return;
+            }
+
             let result = (water * 1000) / dilution;
             
+            // 智慧顯示邏輯：小數點太多時自動簡化，避免老人眼花
             let displayResult;
             if (result < 1) {
                 displayResult = result.toFixed(3);
-            } else if (Number.isInteger(result)) {
-                displayResult = result;
-            } else {
+            } else if (result < 10 && !Number.isInteger(result)) {
                 displayResult = result.toFixed(1);
+            } else {
+                displayResult = Math.round(result * 10) / 10; // 最多一位小數
             }
+
             document.getElementById('resultValue').innerText = displayResult;
         }
-        window.onload = calculate;
 
-        // PWA 安裝邏輯
+        // --- PWA 安裝邏輯 ---
         let deferredPrompt;
-        const installContainer = document.getElementById('installContainer');
-        const iosPrompt = document.getElementById('iosInstallPrompt');
+        const installBtn = document.getElementById('installBtn');
+        const iosPrompt = document.getElementById('iosPrompt');
 
-        // 偵測是否為 iOS
+        // 偵測 iOS
         const isIos = () => {
-          const userAgent = window.navigator.userAgent.toLowerCase();
-          return /iphone|ipad|ipod/.test( userAgent );
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            return /iphone|ipad|ipod/.test( userAgent );
         }
+        // 偵測是否已經是 App 模式
+        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
 
-        // 1. Android/Chrome 處理
+        // Android / PC 顯示安裝按鈕
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            // 顯示安裝按鈕
-            installContainer.style.display = 'block';
+            installBtn.style.display = 'flex';
         });
 
-        document.getElementById('installBtn').addEventListener('click', async () => {
+        installBtn.addEventListener('click', async () => {
             if (deferredPrompt) {
                 deferredPrompt.prompt();
                 const { outcome } = await deferredPrompt.userChoice;
                 if (outcome === 'accepted') {
-                    installContainer.style.display = 'none';
+                    installBtn.style.display = 'none';
                 }
                 deferredPrompt = null;
             }
         });
 
-        // 2. iOS 處理 (如果是 iOS 且沒安裝在主畫面模式下)
-        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
-        
+        // iOS 顯示教學
         if (isIos() && !isInStandaloneMode()) {
             iosPrompt.style.display = 'block';
         }
+
+        // 初始化
+        window.onload = calculate;
     </script>
 </body>
 </html>
