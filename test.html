@@ -2,256 +2,308 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>農好事～藥劑肥料稀釋輕鬆算</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#2e7d32">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
     <style>
-        /* --- 基礎設定 --- */
+        /* --- 全域設定：強調高對比與易讀性 --- */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f0f7f4;
+            font-family: -apple-system, BlinkMacSystemFont, "Microsoft JhengHei", sans-serif;
+            background-color: #f4f7f6; /* 淺灰底保護眼睛 */
             margin: 0;
-            padding: 20px;
-            color: #333;
+            padding: 15px;
+            color: #222;
             display: flex;
             justify_content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
         .container {
             background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 500px;
-            padding: 25px;
+            max-width: 550px; /* 手機版寬度 */
+            padding: 20px;
             box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
         }
 
-        h1 {
-            color: #2e7d32;
+        /* 標題區 */
+        header {
             text-align: center;
             margin-bottom: 20px;
-            font-size: 1.8rem;
-            line-height: 1.2;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+        
+        h1 {
+            color: #1b5e20; /* 深綠色 */
+            margin: 0;
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+        }
+        
+        .sub-title {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
         }
 
-        /* --- 分頁切換按鈕 --- */
+        /* --- 分頁切換 (Tabs) --- */
         .tabs {
             display: flex;
             margin-bottom: 20px;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid #2e7d32;
+            background: #e8f5e9;
+            border-radius: 12px;
+            padding: 4px;
         }
 
         .tab-btn {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: none;
-            background-color: white;
-            color: #2e7d32;
+            background: transparent;
+            color: #1b5e20;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            border-radius: 10px;
+            transition: 0.2s;
         }
 
         .tab-btn.active {
-            background-color: #2e7d32;
+            background-color: #2e7d32; /* 鮮明綠色 */
             color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         /* --- 輸入區塊 --- */
-        .form-group { margin-bottom: 20px; }
+        .form-group { margin-bottom: 25px; }
         
         label {
             display: block;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 8px;
-            color: #1b5e20;
+            font-size: 1.3rem; /* 大字體 */
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #333;
         }
 
+        /* 巨大化的輸入框與選單，方便手指點擊 */
         select, input[type="number"] {
             width: 100%;
-            padding: 15px;
-            font-size: 1.2rem;
-            border: 2px solid #a5d6a7;
-            border-radius: 10px;
+            padding: 16px;
+            font-size: 1.3rem;
+            border: 2px solid #81c784;
+            border-radius: 12px;
             box-sizing: border-box;
             background-color: #fff;
+            color: #000;
         }
         
-        /* 隱藏/顯示控制 */
+        select:focus, input:focus {
+            outline: none;
+            border-color: #2e7d32;
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2);
+        }
+
         .hidden { display: none; }
 
-        /* --- 結果顯示區 --- */
+        /* --- 結果顯示區 (強調視覺重點) --- */
         .result-box {
-            background-color: #e8f5e9;
-            border: 2px dashed #66bb6a;
-            border-radius: 10px;
-            padding: 20px;
+            background-color: #fff3e0; /* 淺橘底色突顯結果 */
+            border: 3px solid #ff9800;
+            border-radius: 16px;
+            padding: 25px 10px;
             text-align: center;
-            margin-top: 20px;
+            margin-top: 10px;
+            margin-bottom: 25px;
         }
-        .result-value { font-size: 2.5rem; font-weight: bold; color: #c62828; display: block; }
-        .result-unit { font-size: 1.1rem; color: #333; }
 
-        /* --- 收藏與分享按鈕區 --- */
+        .result-label {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .result-value {
+            font-size: 3.5rem; /* 超大數字 */
+            font-weight: 900;
+            color: #d32f2f; /* 紅色警示色 */
+            line-height: 1.2;
+            display: block;
+        }
+
+        .result-unit {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        /* --- 按鈕區 (LINE 與 安裝) --- */
         .action-area {
-            margin-top: 25px;
-            border-top: 1px solid #eee;
-            padding-top: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
+            margin-top: auto; /* 推到底部 */
+            display: grid;
+            gap: 15px;
         }
 
-        .btn-action {
-            flex: 1;
-            padding: 12px;
+        .btn {
+            width: 100%;
+            padding: 15px;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
-            min-width: 120px;
-            font-weight: bold;
+            text-decoration: none; /* 移除連結下底線 */
+            transition: transform 0.1s;
         }
 
+        .btn:active { transform: scale(0.98); }
+
+        /* LINE 按鈕樣式 */
         .btn-line {
             background-color: #06c755;
             color: white;
+            box-shadow: 0 4px 10px rgba(6, 199, 85, 0.3);
         }
 
-        .btn-copy {
-            background-color: #607d8b;
+        /* PWA 安裝按鈕樣式 */
+        .btn-install {
+            background-color: #424242;
             color: white;
+            display: none; /* 預設隱藏，程式偵測後顯示 */
         }
 
-        .btn-pwa {
-            background-color: #ff9800;
-            color: white;
-            width: 100%; /* PWA 按鈕獨佔一行 */
-            display: none; /* 預設隱藏 */
+        /* iOS 提示區 */
+        .ios-prompt {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            color: #555;
+            line-height: 1.6;
+            margin-top: 15px;
+            display: none;
+            border: 1px dashed #999;
         }
-
-        .toast {
-            visibility: hidden;
-            min-width: 250px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 50px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1;
-            left: 50%;
-            bottom: 30px;
-            transform: translateX(-50%);
-            font-size: 17px;
-        }
-        .toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
-
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🌱 農好事<br><span style="font-size:0.8em; color:#666;">藥劑肥料稀釋輕鬆算</span></h1>
+        <header>
+            <h1>農好事</h1>
+            <div class="sub-title">藥劑肥料稀釋輕鬆算</div>
+        </header>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchMode('select')" id="tab-select">常用速查</button>
+            <button class="tab-btn active" onclick="switchMode('select')" id="tab-select">快速選單</button>
             <button class="tab-btn" onclick="switchMode('custom')" id="tab-custom">自行輸入</button>
         </div>
 
         <div id="panel-select">
             <div class="form-group">
-                <label>稀釋倍數</label>
+                <label>📋 請選擇稀釋倍數</label>
                 <select id="dilution" onchange="calculate()">
+                    <option value="100">100 倍</option>
+                    <option value="200">200 倍</option>
+                    <option value="300">300 倍</option>
+                    <option value="400">400 倍</option>
                     <option value="500">500 倍</option>
+                    <option value="600">600 倍</option>
+                    <option value="700">700 倍</option>
                     <option value="800">800 倍</option>
-                    <option value="1000" selected>1000 倍</option>
+                    <option value="900">900 倍</option>
+                    <option value="1000" selected>1000 倍 (預設)</option>
+                    <option value="1200">1200 倍</option>
                     <option value="1500">1500 倍</option>
                     <option value="2000">2000 倍</option>
+                    <option value="2500">2500 倍</option>
                     <option value="3000">3000 倍</option>
-                    </select>
+                    <option value="4000">4000 倍</option>
+                    <option value="5000">5000 倍</option>
+                    <option value="6000">6000 倍</option>
+                    <option value="8000">8000 倍</option>
+                    <option value="10000">10000 倍</option>
+                    <option value="20000">20000 倍</option>
+                    <option value="30000">30000 倍</option>
+                    <option value="40000">40000 倍</option>
+                    <option value="50000">50000 倍</option>
+                    <option value="60000">60000 倍</option>
+                    <option value="70000">70000 倍</option>
+                    <option value="80000">80000 倍</option>
+                    <option value="90000">90000 倍</option>
+                    <option value="100000">100000 倍</option>
+                </select>
             </div>
             <div class="form-group">
-                <label>用水量</label>
+                <label>💧 請選擇用水量</label>
                 <select id="water" onchange="calculate()">
+                    <option value="10">10 公升</option>
                     <option value="16" selected>16 公升 (背桶)</option>
                     <option value="20">20 公升</option>
                     <option value="25">25 公升 (動力桶)</option>
-                    <option value="200">200 公升</option>
-                    <option value="1000">1000 公升 (一噸)</option>
+                    <option value="120">120 公升</option>
+                    <option value="200">200 公升 (大桶)</option>
+                    <option value="300">300 公升</option>
+                    <option value="500">500 公升</option>
+                    <option value="1000">1000 公升 (一噸水)</option>
                 </select>
             </div>
         </div>
 
         <div id="panel-custom" class="hidden">
             <div class="form-group">
-                <label>輸入稀釋倍數</label>
-                <input type="number" id="custom-dilution" placeholder="例：450" oninput="calculate()">
+                <label>🖊️ 輸入稀釋倍數</label>
+                <input type="number" id="custom-dilution" placeholder="例：450" inputmode="numeric" oninput="calculate()">
             </div>
             <div class="form-group">
-                <label>輸入用水量 (公升)</label>
-                <input type="number" id="custom-water" placeholder="例：100" oninput="calculate()">
+                <label>🖊️ 輸入用水量 (公升)</label>
+                <input type="number" id="custom-water" placeholder="例：100" inputmode="numeric" oninput="calculate()">
             </div>
         </div>
 
         <div class="result-box">
-            <div class="result-title">請加入藥劑 / 肥料</div>
-            <span id="resultValue" class="result-value">0</span>
-            <span class="result-unit">毫升(cc) 或 公克(g)</span>
+            <div class="result-label">您需要加入</div>
+            <span id="resultValue" class="result-value">16</span>
+            <div class="result-unit">毫升(cc) 或 公克(g)</div>
         </div>
 
-        <div id="iosInstallPrompt">
-            <strong>🍎 iPhone 用戶請這樣做：</strong><br>
-            1. 點擊下方瀏覽器的 <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDdlZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAxMnY4YzAgMS4xLjk5NiAyIDIuMDExIDIuMDAxaDEzLjk3OEMyMC4wMDggMjIgMjEgMjEuMSAyMSAyMHYtOCIvPjxwb2x5bGluZSBwb2ludHM9IjE2IDYgMTIgMiA4IDYiLz48bGluZSB4MT0iMTIiIHkxPSIyIiB4Mj0iMTIiIHkyPSIxNSIvPjwvc3ZnPg==" style="vertical-align:middle"> <strong>分享按鈕</strong><br>
-            2. 滑動選單找到並點選 <strong>「加入主畫面」</strong> 即可。
-        </div>
         <div class="action-area">
-            <button class="btn-action btn-line" onclick="shareToLine()">
-                Line 收藏
-            </button>
             
-            <button class="btn-action btn-copy" onclick="copyLink()">
-                複製連結
+            <button id="installBtn" class="btn btn-install">
+                📲 把【農好事計算器】安裝到桌面
             </button>
 
-            <button id="installBtn" class="btn-action btn-pwa">
-                📲 加入手機桌面
-            </button>
+            <a href="https://line.me/R/ti/p/@ghp0573p" target="_blank" class="btn btn-line">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/LINE_logo.svg" width="24" style="margin-right:10px;">
+                加入 LINE 好友諮詢
+            </a>
         </div>
 
-        <div style="text-align:center; margin-top:15px; color:#888; font-size:0.8rem;">
-            農作計算小幫手 | 自動記憶上次輸入
+        <div id="iosPrompt" class="ios-prompt">
+            <strong>🍎 如何加入 iPhone 桌面？</strong><br>
+            1. 點擊下方瀏覽器的「分享按鈕」<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDdlZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAxMnY4YzAgMS4xLjk5NiAyIDIuMDExIDIuMDAxaDEzLjk3OEMyMC4wMDggMjIgMjEgMjEuMSAyMSAyMHYtOCIvPjxwb2x5bGluZSBwb2ludHM9IjE2IDYgMTIgMiA4IDYiLz48bGluZSB4MT0iMTIiIHkxPSIyIiB4Mj0iMTIiIHkyPSIxNSIvPjwvc3ZnPg==" style="vertical-align:middle"><br>
+            2. 滑動選單找到並點選 <strong>「加入主畫面」</strong>
         </div>
+
     </div>
-
-    <div id="toast" class="toast">網址已複製！</div>
 
     <script>
         let currentMode = 'select';
-
-        // 初始化：讀取上次的紀錄
-        window.onload = function() {
-            loadSettings();
-            calculate();
-        };
 
         function switchMode(mode) {
             currentMode = mode;
@@ -274,17 +326,9 @@
             if (currentMode === 'select') {
                 dilution = parseFloat(document.getElementById('dilution').value);
                 water = parseFloat(document.getElementById('water').value);
-                // 儲存設定
-                localStorage.setItem('saved_mode', 'select');
-                localStorage.setItem('saved_dilution_select', dilution);
-                localStorage.setItem('saved_water_select', water);
             } else {
                 dilution = parseFloat(document.getElementById('custom-dilution').value);
                 water = parseFloat(document.getElementById('custom-water').value);
-                // 儲存設定
-                localStorage.setItem('saved_mode', 'custom');
-                if(dilution) localStorage.setItem('saved_dilution_custom', dilution);
-                if(water) localStorage.setItem('saved_water_custom', water);
             }
 
             if (!dilution || !water || dilution === 0) {
@@ -293,65 +337,38 @@
             }
 
             let result = (water * 1000) / dilution;
-            let displayResult = (result < 1) ? result.toFixed(3) : (Number.isInteger(result) ? result : result.toFixed(1));
-            document.getElementById('resultValue').innerText = displayResult;
-        }
-
-        // 讀取歷史設定
-        function loadSettings() {
-            const mode = localStorage.getItem('saved_mode');
-            if (mode === 'custom') {
-                switchMode('custom');
-                document.getElementById('custom-dilution').value = localStorage.getItem('saved_dilution_custom') || '';
-                document.getElementById('custom-water').value = localStorage.getItem('saved_water_custom') || '';
-            } else {
-                // 預設 Select 模式
-                const savedDil = localStorage.getItem('saved_dilution_select');
-                const savedWater = localStorage.getItem('saved_water_select');
-                if (savedDil) document.getElementById('dilution').value = savedDil;
-                if (savedWater) document.getElementById('water').value = savedWater;
-            }
-        }
-
-        // --- 分享功能 ---
-        function shareToLine() {
-            // 取得目前網址
-            const url = encodeURIComponent(window.location.href);
-            // 檢查是否是本地檔案
-            if (window.location.protocol === 'file:') {
-                alert("請先將網頁上傳到網路空間，才能使用 Line 分享喔！");
-                return;
-            }
-            // 開啟 Line 分享頁面
-            window.open('https://line.me/R/msg/text/?' + url + '%0A農好事-藥劑肥料計算機', '_blank');
-        }
-
-        function copyLink() {
-            const dummy = document.createElement('input');
-            const text = window.location.href;
-            document.body.appendChild(dummy);
-            dummy.value = text;
-            dummy.select();
-            document.execCommand('copy');
-            document.body.removeChild(dummy);
             
-            showToast();
-        }
+            // 智慧顯示邏輯：小數點太多時自動簡化，避免老人眼花
+            let displayResult;
+            if (result < 1) {
+                displayResult = result.toFixed(3);
+            } else if (result < 10 && !Number.isInteger(result)) {
+                displayResult = result.toFixed(1);
+            } else {
+                displayResult = Math.round(result * 10) / 10; // 最多一位小數
+            }
 
-        function showToast() {
-            const x = document.getElementById("toast");
-            x.className = "toast show";
-            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+            document.getElementById('resultValue').innerText = displayResult;
         }
 
         // --- PWA 安裝邏輯 ---
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
+        const iosPrompt = document.getElementById('iosPrompt');
 
+        // 偵測 iOS
+        const isIos = () => {
+            const userAgent = window.navigator.userAgent.toLowerCase();
+            return /iphone|ipad|ipod/.test( userAgent );
+        }
+        // 偵測是否已經是 App 模式
+        const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+        // Android / PC 顯示安裝按鈕
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            installBtn.style.display = 'block'; // 有支援才顯示
+            installBtn.style.display = 'flex';
         });
 
         installBtn.addEventListener('click', async () => {
@@ -364,6 +381,14 @@
                 deferredPrompt = null;
             }
         });
+
+        // iOS 顯示教學
+        if (isIos() && !isInStandaloneMode()) {
+            iosPrompt.style.display = 'block';
+        }
+
+        // 初始化
+        window.onload = calculate;
     </script>
 </body>
 </html>
