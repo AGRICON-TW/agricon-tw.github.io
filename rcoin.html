@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 R幣星球任務儀表板 (多帳號版)</title>
+    <style>
+        :root {
+            --primary-bg: #0b0f19;
+            --panel-bg: #1a2235;
+            --text-color: #e2e8f0;
+            --accent-gold: #fbbf24;
+            --btn-color: #3b82f6;
+            --btn-hover: #2563eb;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0b0f19 70%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--panel-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+        }
+        h1 {
+            text-align: center;
+            color: var(--accent-gold);
+            margin-top: 0;
+            text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+            font-size: 1.8em;
+        }
+        
+        /* 帳號切換區 */
+        .account-bar {
+            background-color: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #475569;
+        }
+        .account-bar select {
+            width: 60%;
+            margin-bottom: 0;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+        }
+        .account-bar button {
+            width: 35%;
+            padding: 10px;
+            font-size: 1em;
+            background-color: #4f46e5;
+        }
+
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #1e3a8a, #312e81);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid #4f46e5;
+        }
+        .stat-box { text-align: center; width: 48%; }
+        .stat-value { font-size: 2.5em; font-weight: bold; color: var(--accent-gold); }
+        .stat-label { font-size: 0.9em; color: #93c5fd; }
+        
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.03);
+            border-radius: 8px;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #60a5fa;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+        label { display: block; margin-bottom: 10px; cursor: pointer; font-size: 1.05em; }
+        input[type="checkbox"] { transform: scale(1.2); margin-right: 10px; cursor: pointer; }
+        select, input[type="number"], input[type="text"] {
+            width: 100%; padding: 10px; background-color: #0f172a; color: white;
+            border: 1px solid #475569; border-radius: 5px; margin-bottom: 10px; font-size: 1em;
+        }
+        button {
+            width: 100%; padding: 15px; background-color: var(--btn-color); color: white;
+            border: none; border-radius: 8px; font-size: 1.2em; font-weight: bold; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        button:hover { background-color: var(--btn-hover); transform: translateY(-2px); }
+        .btn-spend { background-color: var(--danger); }
+        .btn-spend:hover { background-color: #b91c1c; }
+        
+        .log-area {
+            margin-top: 20px; font-size: 0.9em; color: #94a3b8; max-height: 150px;
+            overflow-y: auto; background-color: #0f172a; padding: 10px; border-radius: 5px;
+        }
+        .log-entry { margin-bottom: 5px; border-bottom: 1px dashed #334155; padding-bottom: 5px; }
+        .success-text { color: var(--success); }
+        .danger-text { color: var(--danger); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 R幣星球任務總署</h1>
+    
+    <div class="account-bar">
+        <select id="user-select" onchange="switchUser()">
+            </select>
+        <button onclick="addNewUser()">➕ 新增太空人</button>
+    </div>
+
+    <div class="dashboard">
+        <div class="stat-box">
+            <div class="stat-label" id="label-coins">💰 總 R幣資產</div>
+            <div class="stat-value" id="display-coins">0</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">🔥 連續達標天數</div>
+            <div class="stat-value" id="display-streak">0</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3 id="task-title">✅ 五大基礎任務 (目前操作:)</h3>
+        <label><input type="checkbox" class="task-check"> 1. 書包偵探 (整理好、削好、無雜物)</label>
+        <label><input type="checkbox" class="task-check"> 2. 潔淨守衛 (洗好澡、刷好牙並檢查)</label>
+        <label><input type="checkbox" class="task-check"> 3. 空間收復 (書桌整齊、書櫃玩具歸位)</label>
+        <label><input type="checkbox" class="task-check"> 4. 碗筷潛水 (碗筷放水槽並浸泡)</label>
+        <label><input type="checkbox" class="task-check"> 5. 地面淨空 (客廳地板清潔乾淨)</label>
+    </div>
+
+    <div class="section">
+        <h3>⏱️ 完成時間判定</h3>
+        <select id="time-select">
+            <option value="">-- 請選擇今天全部完成的時間 --</option>
+            <option value="3">黃金時間：8:30 前完成 (+3 R幣)</option>
+            <option value="2">銀色時間：9:00 前完成 (+2 R幣)</option>
+            <option value="1">銅色時間：9:30 前完成 (+1 R幣)</option>
+            <option value="-1">黑洞一級：9:31 - 10:00 (-1 R幣)</option>
+            <option value="-2">黑洞二級：10:01 - 10:30 (-2 R幣)</option>
+            <option value="-3">黑洞三級：10:31 以後 (-3 R幣)</option>
+        </select>
+    </div>
+
+    <div class="section">
+        <h3>✨ 飛行員加給 (選填)</h3>
+        <label><input type="checkbox" id="bonus-proactive"> ⚡ 8:15前「自行主動」完成 (+1 R幣)</label>
+        <label><input type="checkbox" id="bonus-perfect"> 🎖️ 檢查一次通過無重做 (+1 R幣)</label>
+    </div>
+
+    <div class="section">
+        <h3>📚 智慧能量補充 (閱讀認證)</h3>
+        <label>第一本閱讀成績：</label>
+        <select id="read-1">
+            <option value="none">-- 尚未進行認證 --</option>
+            <option value="3">答對 10 題 (+3 R幣)</option>
+            <option value="2">答對 9 題 (+2 R幣)</option>
+            <option value="1">答對 8 題 (+1 R幣)</option>
+            <option value="0">答對 7 題 (不加不扣)</option>
+            <option value="-1">答對 6 題 (-1 R幣)</option>
+            <option value="-2">答對 5 題 (-2 R幣)</option>
+            <option value="-3">答對 4 題或以下 (-3 R幣)</option>
+        </select>
+        <label>第二本閱讀成績：</label>
+        <select id="read-2">
+            <option value="none">-- 尚未進行認證 --</option>
+            <option value="3">答對 10 題 (+3 R幣)</option>
+            <option value="2">答對 9 題 (+2 R幣)</option>
+            <option value="1">答對 8 題 (+1 R幣)</option>
+            <option value="0">答對 7 題 (不加不扣)</option>
+            <option value="-1">答對 6 題 (-1 R幣)</option>
+            <option value="-2">答對 5 題 (-2 R幣)</option>
+            <option value="-3">答對 4 題或以下 (-3 R幣)</option>
+        </select>
+    </div>
+
+    <button onclick="calculateToday()" style="margin-bottom: 20px;">🚀 結算 <span id="btn-calc-name"></span> 的任務</button>
+
+    <div class="section" style="background-color: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444;">
+        <h3 style="color: #ef4444; border-bottom: 1px dashed #ef4444;">🛒 兌換中心 (花費 R幣)</h3>
+        <input type="number" id="spend-amount" placeholder="輸入要扣除的 R幣數量 (例如: 10)">
+        <input type="text" id="spend-reason" placeholder="兌換了什麼？ (例如: 週末看電視30分鐘)">
+        <button onclick="spendCoins()" class="btn-spend">🎁 確認兌換</button>
+    </div>
+
+    <div class="section">
+        <h3 id="log-title">📜 航行日誌 (近期紀錄)</h3>
+        <div class="log-area" id="log-area">
+            </div>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button onclick="renameUser()" style="background-color: #64748b; padding: 10px; font-size: 0.9em;">✏️ 更改名字</button>
+            <button onclick="deleteUser()" style="background-color: #334155; padding: 10px; font-size: 0.9em;">🗑️ 刪除此帳號</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 資料結構升級邏輯 (相容舊版單一帳號)
+    let appData = JSON.parse(localStorage.getItem('rcoinData'));
+    
+    if (!appData || appData.totalCoins !== undefined) {
+        // 如果是全新開始，或讀到舊版的單一資料，進行轉換
+        let oldCoins = appData ? appData.totalCoins : 0;
+        let oldStreak = appData ? appData.streakDays : 0;
+        let oldLogs = appData ? appData.logs : [];
+        
+        appData = {
+            currentUser: "user1",
+            users: {
+                "user1": { name: "太空人 1 號", coins: oldCoins, streak: oldStreak, logs: oldLogs },
+                "user2": { name: "太空人 2 號", coins: 0, streak: 0, logs: [] }
+            }
+        };
+        localStorage.setItem('rcoinData', JSON.stringify(appData));
+    }
+
+    // 取得當前使用者資料的捷徑
+    function getCurrentUser() {
+        return appData.users[appData.currentUser];
+    }
+
+    // 更新畫面顯示
+    function updateUI() {
+        const uData = getCurrentUser();
+        
+        // 更新下拉選單
+        const select = document.getElementById('user-select');
+        select.innerHTML = '';
+        for (const [id, data] of Object.entries(appData.users)) {
+            const option = document.createElement('option');
+            option.value = id;
+            option.textContent = `👨‍🚀 ${data.name}`;
+            if (id === appData.currentUser) option.selected = true;
+            select.appendChild(option);
+        }
+
+        // 更新數據
+        document.getElementById('display-coins').innerText = uData.coins;
+        document.getElementById('display-streak').innerText = uData.streak;
+        
+        // 更新標題名字
+        document.getElementById('label-coins').innerText = `💰 ${uData.name} 的 R幣`;
+        document.getElementById('task-title').innerText = `✅ 五大基礎任務 (操作中: ${uData.name})`;
+        document.getElementById('btn-calc-name').innerText = uData.name;
+        document.getElementById('log-title').innerText = `📜 航行日誌 (${uData.name})`;
+
+        // 更新日誌
+        let logHtml = '';
+        uData.logs.forEach(log => {
+            logHtml += `<div class="log-entry">${log}</div>`;
+        });
+        document.getElementById('log-area').innerHTML = logHtml || "尚未有任務紀錄...";
+        
+        // 切換帳號時清空輸入框
+        document.querySelectorAll('.task-check').forEach(task => task.checked = false);
+        document.getElementById('time-select').value = "";
+        document.getElementById('bonus-proactive').checked = false;
+        document.getElementById('bonus-perfect').checked = false;
+        document.getElementById('read-1').value = "none";
+        document.getElementById('read-2').value = "none";
+    }
+
+    // 切換帳號
+    function switchUser() {
+        appData.currentUser = document.getElementById('user-select').value;
+        localStorage.setItem('rcoinData', JSON.stringify(appData));
+        updateUI();
+    }
+
+    // 新增帳號
+    function addNewUser() {
+        const newName = prompt("請輸入新太空人的名字：");
+        if (newName && newName.trim() !== "") {
+            const newId = 'user' + Date.now();
+            appData.users[newId] = { name: newName.trim(), coins: 0, streak: 0, logs: [] };
+            appData.currentUser = newId;
+            localStorage.setItem('rcoinData', JSON.stringify(appData));
+            updateUI();
+        }
+    }
+
+    // 重新命名帳號
+    function renameUser() {
+        const uData = getCurrentUser();
+        const newName = prompt("重新命名太空人：", uData.name);
+        if (newName && newName.trim() !== "") {
+            uData.name = newName.trim();
+            localStorage.setItem('rcoinData', JSON.stringify(appData));
+            updateUI();
+        }
+    }
+
+    // 刪除帳號
+    function deleteUser() {
+        if (Object.keys(appData.users).length <= 1) {
+            alert("⚠️ 至少要保留一個帳號喔！");
+            return;
+        }
+        const uData = getCurrentUser();
+        if (confirm(`⚠️ 確定要刪除「${uData.name}」的所有資料嗎？動作無法復原！`)) {
+            delete appData.users[appData.currentUser];
+            appData.currentUser = Object.keys(appData.users)[0]; // 切換到第一個剩下的帳號
+            localStorage.setItem('rcoinData', JSON.stringify(appData));
+            updateUI();
+        }
+    }
+
+    // 結算收入
+    function calculateToday() {
+        const uData = getCurrentUser();
+        const tasks = document.querySelectorAll('.task-check');
+        let allTasksDone = true;
+        tasks.forEach(task => { if(!task.checked) allTasksDone = false; });
+
+        if(!allTasksDone) {
+            alert(`⚠️ 總署警告：${uData.name} 必須完成五大基礎任務，才能結算喔！`);
+            return;
+        }
+
+        const timeSelect = document.getElementById('time-select').value;
+        if(timeSelect === "") {
+            alert('⚠️ 請選擇任務完成時間！');
+            return;
+        }
+        
+        let dailyEarn = parseInt(timeSelect);
+        let logMsg = `【${new Date().toLocaleDateString()}】 時間分數: ${dailyEarn}`;
+
+        if(document.getElementById('bonus-proactive').checked) { dailyEarn += 1; logMsg += `, 主動+1`; }
+        if(document.getElementById('bonus-perfect').checked) { dailyEarn += 1; logMsg += `, 完美+1`; }
+
+        const read1Val = document.getElementById('read-1').value;
+        const read2Val = document.getElementById('read-2').value;
+        let readScore = 0; let readLog = "";
+
+        if(read1Val !== "none") { readScore += parseInt(read1Val); readLog += `本一(${read1Val > 0 ? '+'+read1Val : read1Val}) `; }
+        if(read2Val !== "none") { readScore += parseInt(read2Val); readLog += `本二(${read2Val > 0 ? '+'+read2Val : read2Val}) `; }
+        
+        dailyEarn += readScore;
+        if(readLog !== "") { logMsg += `, 閱讀 [${readLog.trim()}]`; }
+
+        let streakBonus = 0;
+        if(timeSelect === "3") { // 8:30 前
+            uData.streak += 1;
+            if(uData.streak % 28 === 0) { streakBonus = 50; logMsg += ` 🏆滿4週+50`; } 
+            else if(uData.streak % 7 === 0) { streakBonus = 10; logMsg += ` 🔥滿7天+10`; }
+        } else {
+            uData.streak = 0; logMsg += ` (連續歸零)`;
+        }
+
+        dailyEarn += streakBonus;
+        uData.coins += dailyEarn;
+        logMsg += ` ➔ 總結: <span class="${dailyEarn >= 0 ? 'success-text' : 'danger-text'}"><b>${dailyEarn >= 0 ? '+' : ''}${dailyEarn}</b></span>`;
+
+        uData.logs.unshift(logMsg);
+        if(uData.logs.length > 30) uData.logs.pop(); 
+        
+        localStorage.setItem('rcoinData', JSON.stringify(appData));
+        updateUI();
+        alert(`結算成功！${uData.name} 今天變動了 ${dailyEarn} R幣！`);
+    }
+
+    // 扣除花費
+    function spendCoins() {
+        const uData = getCurrentUser();
+        const amount = parseInt(document.getElementById('spend-amount').value);
+        const reason = document.getElementById('spend-reason').value || "兌換獎勵";
+        
+        if(isNaN(amount) || amount <= 0) { alert("請輸入正確的 R幣扣除數量！"); return; }
+        if(uData.coins < amount) { alert(`⚠️ 餘額不足！${uData.name} 的 R幣不夠喔！`); return; }
+
+        uData.coins -= amount;
+        const logMsg = `【${new Date().toLocaleDateString()}】 🛒 兌換: ${reason} ➔ <span class="danger-text"><b>-${amount}</b></span>`;
+        
+        uData.logs.unshift(logMsg);
+        if(uData.logs.length > 30) uData.logs.pop();
+        
+        localStorage.setItem('rcoinData', JSON.stringify(appData));
+        document.getElementById('spend-amount').value = "";
+        document.getElementById('spend-reason').value = "";
+        updateUI();
+        alert(`兌換成功！已經扣除 ${uData.name} 的 ${amount} R幣。`);
+    }
+
+    // 啟動更新
+    updateUI();
+</script>
+
+</body>
+</html>
