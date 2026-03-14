@@ -34,8 +34,8 @@
         <div class="form-group"><label>您的姓氏</label><input type="text" id="lastName" required placeholder="例如：王、林、陳"></div>
         <div class="form-group"><label>性別</label><select id="gender" required><option value="">請選擇</option><option value="先生">男</option><option value="女士">女</option></select></div>
         <div class="form-group"><label>聯絡電話</label><input type="tel" id="phone" required placeholder="例如：0912345678"></div>
-        <div class="form-group"><label>種植區域 (縣市/鄉鎮)</label><input type="text" id="region" required placeholder="例如：南投縣名間鄉、雲林縣古坑鄉"></div>
-        <div class="form-group"><label>主要栽培作物</label><input type="text" id="crop" required placeholder="例如：烏龍茶、紅茶"></div>
+        <div class="form-group"><label>種植區域 (縣市/鄉鎮)</label><input type="text" id="region" required placeholder="例如：彰化溪湖、台中東勢"></div>
+        <div class="form-group"><label>主要栽培作物</label><input type="text" id="crop" required placeholder="例如：葡萄、水梨、桃"></div>
         <div class="form-group"><label>預計轉型面積</label><input type="text" id="area" required placeholder="例如：1甲、0.5公頃"></div>
         <div class="form-group"><label>電子信箱 (接收報告用)</label><input type="email" id="email" required placeholder="例如：yourname@email.com"></div>
 
@@ -86,11 +86,11 @@
         { id: "q5", text: "5. 【隔離帶】我的田區與鄰居慣行區有足夠距離防藥劑飄移。", part: 1 },
         { id: "q6", text: "6. 【水源獨立】我有自己專用的灌溉水源，不需跟別人共用渠溝。", part: 1 },
         { id: "q7", text: "7. 【生態基礎】這裡的土地目前仍有蚯蚓或雜草生長，不是長年噴藥的死土。", part: 1 },
-        { id: "q8", text: "8. 【環境風險】附近沒有容易爆發大規模病蟲害的廢棄果園或大型慣行茶區。", part: 1 },
+        { id: "q8", text: "8. 【環境風險】附近沒有容易爆發大規模病蟲害的廢棄果園或大型慣行農場。", part: 1 },
         
         { id: "q9", text: "9. 【人力支援】除了我，家裡還有其他成員能長期分擔除草、抓蟲等瑣碎勞力。", part: 2 },
         { id: "q10", text: "10. 【獨立設備】我有（或打算買）有機專屬噴霧機具，不會跟慣行藥桶共用。", part: 2 },
-        { id: "q11", text: "11. 【後端彈性】我有配合的有機工廠，或能處理賣相不佳茶葉的二級加工能力。", part: 2 },
+        { id: "q11", text: "11. 【後端彈性】我有配合的有機加工工廠，或能處理賣相不佳蔬果的二級加工能力。", part: 2 },
         { id: "q12", text: "12. 【定價能力】我有認同理念的熟客願意支付較高價格，不需跟傳統市場殺價。", part: 2 },
         { id: "q13", text: "13. 【鄰里溝通】我跟鄰居關係良好，他們噴藥前願意提前告知或避開田埂。", part: 2 },
         { id: "q14", text: "14. 【家庭支持】另一半與家人支持轉型，願意一起度過前幾年的低收入期。", part: 2 },
@@ -152,10 +152,10 @@
             part3Text = "您的生態管理思維非常成熟！已經具備「從根源解決問題」的觀察力，且具備不依賴特效藥的定力。這將是您轉作有機最大的軟實力優勢，能大幅降低未來的除蟲成本。";
             part3Color = "#1976d2";
         } else if(avgC >= 3.0) {
-            part3Text = "您具備基本的生態觀念，但遇到突發病蟲害時，可能仍會習慣尋找「有機特效藥」。建議多花時間觀察田間天敵與土壤排水，試著培養「管理生態」而非「消滅害蟲」的系統性解決能力。";
+            part3Text = "您具備基本的生態觀念，但遇到突發病蟲害時，可能仍會習慣尋找「有機特效藥」。建議多花時間觀察田間天敵與土壤排水，試著培養「管理生態」的系統性解決能力。";
             part3Color = "#1976d2";
         } else {
-            part3Text = "您目前的思維仍偏向慣行農法的「對抗式管理（看到蟲就想殺、黃葉就想補）」。建議在正式轉型前，多參與生態農業相關課程，改變對待農地的觀念，否則轉型過程不僅辛苦，也容易感到挫折。";
+            part3Text = "您目前仍偏向慣行農法的「對抗式管理（看到蟲就想殺、黃葉就想補）」。建議在正式轉型前，多參與生態農業相關課程，改變對待農地的觀念，讓轉型過程更順利，也容易成功。";
             part3Color = "#c62828";
         }
 
