@@ -163,19 +163,29 @@
         }
 
         // 呼叫 GAS 寄信
+       // 呼叫 GAS 寄信
         fetch(GAS_URL, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain;charset=utf-8' // 加上這行，巧妙避開瀏覽器的 CORS 攔截
+            },
             body: JSON.stringify(payload)
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('loadingMsg').style.display = 'none';
-            document.getElementById('assessmentForm').style.display = 'none';
-            document.getElementById('resultArea').style.display = 'block';
-            alert("報告已發送至您的信箱！");
+            if(data.status === "success"){
+                document.getElementById('loadingMsg').style.display = 'none';
+                document.getElementById('assessmentForm').style.display = 'none';
+                document.getElementById('resultArea').style.display = 'block';
+                alert("報告已發送至您的信箱！");
+            } else {
+                alert("後端回報錯誤：" + data.message);
+                document.getElementById('loadingMsg').style.display = 'none';
+            }
         })
         .catch(error => {
             alert("寄件失敗，請檢查網路連線或稍後再試。");
+            console.error("Fetch Error:", error);
             document.getElementById('loadingMsg').style.display = 'none';
         });
     });
