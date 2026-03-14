@@ -163,13 +163,14 @@
         }
 
         // 呼叫 GAS 寄信
-       // 呼叫 GAS 寄信
+     // 呼叫 GAS 寄信
         fetch(GAS_URL, {
+            redirect: "follow", // 允許跟隨 Google 的內部轉址
             method: 'POST',
             headers: {
-                'Content-Type': 'text/plain;charset=utf-8' // 加上這行，巧妙避開瀏覽器的 CORS 攔截
+                "Content-Type": "text/plain;charset=utf-8",
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
         })
         .then(response => response.json())
         .then(data => {
@@ -179,13 +180,12 @@
                 document.getElementById('resultArea').style.display = 'block';
                 alert("報告已發送至您的信箱！");
             } else {
-                alert("後端回報錯誤：" + data.message);
+                alert("寄信失敗，後端回報：" + data.message);
                 document.getElementById('loadingMsg').style.display = 'none';
             }
         })
         .catch(error => {
-            alert("寄件失敗，請檢查網路連線或稍後再試。");
-            console.error("Fetch Error:", error);
+            alert("伺服器沒有回應，請檢查網址是否有更換為最新版本。");
             document.getElementById('loadingMsg').style.display = 'none';
         });
     });
