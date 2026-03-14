@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <button onclick="testGAS()">測試寄信</button>
+    <script>
+        function testGAS() {
+            // 請把下面這行換成您的 GAS 網址
+            const GAS_URL = "https://script.google.com/macros/s/AKfycbxF0w9LiPuQBdiJVP-m1LrLyfgrMx0S3t76noUcts9Jb2syTHjYYLlZEm8E0qr0Y3PQ/exec";
+            
+            fetch(GAS_URL, {
+                redirect: "follow",
+                method: 'POST',
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify({
+                    email: "f7493108@gmail.com", // 測試寄給自己
+                    gender: "測試", phone: "0900", crop: "測試茶", area: "1", 
+                    score: "5", resultText: "連線測試成功！"
+                })
+            })
+            .then(res => res.json())
+            .then(data => alert("Google 回傳：" + data.status))
+            .catch(err => alert("連線失敗：" + err));
+        }
+    </script>
+</body>
+</html>
