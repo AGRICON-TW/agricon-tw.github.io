@@ -156,8 +156,33 @@
             score: finalScore,
             resultText: resultText
         };
-        console.log("✅ 前端計算完成，準備送往後端的資料如下：", payload);
-        alert("計算完成！目前為純網頁測試模式，請查看畫面結果。");
+// 準備好 GAS 網址
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxF0w9LiPuQBdiJVP-m1LrLyfgrMx0S3t76noUcts9Jb2syTHjYYLlZEm8E0qr0Y3PQ/exec";
+
+        // 呼叫 GAS 寄信
+        fetch(GAS_URL, {
+            method: 'POST',
+            // 這裡使用 text/plain 是為了避開瀏覽器嚴格的 CORS 預檢攔截
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8",
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert("✅ 評估完成！詳細報告已同步發送至您的信箱。");
+            } else {
+                alert("⚠️ 系統提示：寄件遇到異常 (" + data.message + ")");
+            }
+        })
+        .catch(error => {
+            // 防呆機制：若信件寄出但回傳收據被瀏覽器擋下，依然給予友善提示
+            console.log("連線狀態:", error);
+            alert("✅ 評估完成！報告應已發送至您的信箱，請留意收件匣或垃圾郵件。");
+        });
+    });
+</script>
     });
 </script>
 
